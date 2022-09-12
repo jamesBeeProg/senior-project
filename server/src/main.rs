@@ -7,7 +7,9 @@ use axum::{
     routing::get,
     Router,
 };
+use futures_util::{stream::StreamExt, SinkExt};
 use std::net::SocketAddr;
+use tokio::sync::broadcast::{self, Sender};
 use tower_http::trace::{DefaultMakeSpan, TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -20,9 +22,18 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
+    let (tx, _) = broadcast::channel(100);
+
     // build our application with some routes
     let app = Router::new()
-        .route("/ws", get(ws_handler))
+        .route(
+            "/ws",
+            get(
+                |ws: WebSocketUpgrade, user_agent: Option<TypedHeader<headers::UserAgent>>| {
+                    ws_handler(ws, user_agent, tx)
+                },
+            ),
+        )
         // logging so we can see whats going on
         .layer(
             TraceLayer::new_for_http()
@@ -41,44 +52,40 @@ async fn main() {
 async fn ws_handler(
     ws: WebSocketUpgrade,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
+    tx: Sender<String>,
 ) -> impl IntoResponse {
     if let Some(TypedHeader(user_agent)) = user_agent {
         println!("`{}` connected", user_agent.as_str());
     }
 
-    ws.on_upgrade(handle_socket)
+    ws.on_upgrade(|socket| handle_socket(socket, tx))
 }
 
-async fn handle_socket(mut socket: WebSocket) {
-    loop {
-        if let Some(msg) = socket.recv().await {
-            if let Ok(msg) = msg {
-                match msg {
-                    Message::Text(t) => {
-                        println!("client sent str: {:?}", t);
-                        if socket.send(Message::Text(t)).await.is_err() {
-                            println!("client disconnected");
-                            return;
-                        }
-                    }
-                    Message::Binary(_) => {
-                        println!("client sent binary data");
-                    }
-                    Message::Ping(_) => {
-                        println!("socket ping");
-                    }
-                    Message::Pong(_) => {
-                        println!("socket pong");
-                    }
-                    Message::Close(_) => {
-                        println!("client disconnected");
-                        return;
-                    }
-                }
-            } else {
-                println!("client disconnected");
-                return;
+async fn handle_socket(socket: WebSocket, tx: Sender<String>) {
+    // By splitting we can send and receive at the same time.
+    let (mut sender, mut receiver) = socket.split();
+
+    let mut rx = tx.subscribe();
+    let mut send_task = tokio::spawn(async move {
+        while let Ok(msg) = rx.recv().await {
+            // In any websocket error, break loop.
+            if sender.send(Message::Text(msg)).await.is_err() {
+                break;
             }
         }
-    }
+    });
+
+    // This task will receive messages from client and send them to broadcast subscribers.
+    let mut recv_task = tokio::spawn(async move {
+        while let Some(Ok(Message::Text(text))) = receiver.next().await {
+            // Add username before message.
+            let _ = tx.send(text);
+        }
+    });
+
+    // If any one of the tasks exit, abort the other.
+    tokio::select! {
+        _ = (&mut send_task) => recv_task.abort(),
+        _ = (&mut recv_task) => send_task.abort(),
+    };
 }
