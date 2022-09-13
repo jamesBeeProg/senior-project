@@ -4207,6 +4207,7 @@ dependencies = [
  "headers",
  "prisma-client-rust",
  "prisma-client-rust-cli",
+ "serde",
  "tokio",
  "tower-http",
  "tracing",
