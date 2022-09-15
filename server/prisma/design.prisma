@@ -1,0 +1,139 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:../data/db.sqlite"
+}
+
+generator client {
+    provider = "cargo prisma"
+    output   = "../src/prisma.rs"
+}
+
+model Lodge {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name String
+
+    members Member[]
+    roles   Role[]
+}
+
+model User {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    username String
+
+    memberships Member[]
+    messages    Message[]
+}
+
+model Member {
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    lodge     Lodge    @relation(fields: [lodgeId], references: [id])
+    lodgeId   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    roles RoleMember[]
+
+    @@id([userId, lodgeId])
+}
+
+model RoleMember {
+    role          Role     @relation(fields: [roleId], references: [id])
+    roleId        String
+    member        Member   @relation(fields: [memberUserId, memberLodgeId], references: [userId, lodgeId])
+    memberUserId  String
+    memberLodgeId String
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    @@id([roleId, memberUserId, memberLodgeId])
+}
+
+model Role {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name        String
+    permissions String
+
+    lodge   Lodge        @relation(fields: [lodgeId], references: [id])
+    lodgeId String
+    members RoleMember[]
+}
+
+model PermissionOverride {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name  String
+    allow String
+    deny  String
+
+    channels Channel[]
+}
+
+model Channel {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name     String
+    position Int
+    pinned   Boolean
+
+    compoundComponent    CompoundComponent?
+    topicComponent       TopicComponent?
+    textComponent        TextComponent?
+    parent               CompoundComponent?  @relation(name: "children", fields: [parentId], references: [id])
+    parentId             String?
+    permissionOverride   PermissionOverride? @relation(fields: [permissionOverrideId], references: [id])
+    permissionOverrideId String?
+}
+
+model CompoundComponent {
+    id        String   @id
+    channel   Channel  @relation(fields: [id], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    children Channel[] @relation(name: "children")
+}
+
+model TopicComponent {
+    id        String   @id
+    channel   Channel  @relation(fields: [id], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    content String
+}
+
+model TextComponent {
+    id        String   @id
+    channel   Channel  @relation(fields: [id], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    messages Message[]
+}
+
+model Message {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    content String
+
+    textComponent   TextComponent @relation(fields: [textComponentId], references: [id])
+    textComponentId String
+    author          User          @relation(fields: [authorId], references: [id])
+    authorId        String
+}
