@@ -55,18 +55,23 @@ model Role {
     lodge   Lodge    @relation(fields: [lodgeId], references: [id])
     lodgeId String
     members Member[]
+
+    overrides PermissionOverride[]
 }
 
 model PermissionOverride {
-    id        String   @id @default(uuid())
+    channelId String
+    roleId    String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    name  String
     allow String
     deny  String
 
-    channels Channel[]
+    channel Channel @relation(fields: [channelId], references: [id])
+    role    Role    @relation(fields: [roleId], references: [id])
+
+    @@id([channelId, roleId])
 }
 
 model Channel {
@@ -78,39 +83,40 @@ model Channel {
     position Int
     pinned   Boolean
 
-    compoundComponent    CompoundComponent?
-    topicComponent       TopicComponent?
-    textComponent        TextComponent?
-    parent               CompoundComponent?  @relation(name: "children", fields: [parentId], references: [id])
-    parentId             String?
-    permissionOverride   PermissionOverride? @relation(fields: [permissionOverrideId], references: [id])
-    permissionOverrideId String?
+    compoundComponent CompoundComponent?
+    topicComponent    TopicComponent?
+    textComponent     TextComponent?
+
+    parent      CompoundComponent?   @relation(name: "children", fields: [parentId], references: [id])
+    parentId    String?
+    permissions PermissionOverride[]
 }
 
 model CompoundComponent {
     id        String   @id
-    channel   Channel  @relation(fields: [id], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    channel  Channel   @relation(fields: [id], references: [id])
     children Channel[] @relation(name: "children")
 }
 
 model TopicComponent {
     id        String   @id
-    channel   Channel  @relation(fields: [id], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     content String
+
+    channel Channel @relation(fields: [id], references: [id])
 }
 
 model TextComponent {
     id        String   @id
-    channel   Channel  @relation(fields: [id], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    channel  Channel   @relation(fields: [id], references: [id])
     messages Message[]
 }
 
@@ -123,6 +129,6 @@ model Message {
 
     textComponent   TextComponent @relation(fields: [textComponentId], references: [id])
     textComponentId String
-    author          User          @relation(fields: [authorId], references: [id])
-    authorId        String
+    author          User?         @relation(fields: [authorId], references: [id])
+    authorId        String?
 }
