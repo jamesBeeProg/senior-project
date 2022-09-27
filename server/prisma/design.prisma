@@ -25,34 +25,23 @@ model User {
     updatedAt DateTime @updatedAt
 
     username String
+    password String
 
     memberships Member[]
     messages    Message[]
 }
 
 model Member {
-    user      User     @relation(fields: [userId], references: [id])
-    userId    String
-    lodge     Lodge    @relation(fields: [lodgeId], references: [id])
-    lodgeId   String
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    roles RoleMember[]
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String
+    lodge   Lodge  @relation(fields: [lodgeId], references: [id])
+    lodgeId String
 
-    @@id([userId, lodgeId])
-}
-
-model RoleMember {
-    role          Role     @relation(fields: [roleId], references: [id])
-    roleId        String
-    member        Member   @relation(fields: [memberUserId, memberLodgeId], references: [userId, lodgeId])
-    memberUserId  String
-    memberLodgeId String
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
-
-    @@id([roleId, memberUserId, memberLodgeId])
+    roles Role[]
 }
 
 model Role {
@@ -63,9 +52,9 @@ model Role {
     name        String
     permissions String
 
-    lodge   Lodge        @relation(fields: [lodgeId], references: [id])
+    lodge   Lodge    @relation(fields: [lodgeId], references: [id])
     lodgeId String
-    members RoleMember[]
+    members Member[]
 }
 
 model PermissionOverride {
