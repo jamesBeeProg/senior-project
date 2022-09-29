@@ -1,4 +1,0 @@
-[alias]
-prisma = "run --bin prisma-cli --"
-client = "run --bin client --"
-server = "run --bin server --"
