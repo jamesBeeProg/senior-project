@@ -4,8 +4,6 @@ This document serves as the initial API design documentation for Splist. The API
 
 ## Permissions
 
-TODO describe how final permissions are calculated
-
 | Permission           | Value      |
 | -------------------- | ---------- |
 | Manage Channels      | `(1 << 1)` |
@@ -16,6 +14,54 @@ TODO describe how final permissions are calculated
 | Manage Messages      | `(1 << 6)` |
 | View Topic           | `(1 << 7)` |
 | Edit Topic           | `(1 << 8)` |
+| Manage Roles         | `(1 << 9)` |
+
+### Permissions and the Role Hierarchy
+
+Permissions largely ignore the role hierarchy, except in these specific circumstances:
+
+- A client may only grant members with roles that are lower than the client's highest role.
+- A client may only modify roles lower than their highest role.
+- A client may only modify permissions they themselves have (for both roles and channel overrides).
+- A client may only modify members who's highest role is lower than the client's highest role.
+
+Otherwise, permissions ignore the role hierarchy.
+
+### Permission Priority
+
+There may be a case where a member would have conflicting permissions. In that case, permissions are calculated in the following order:
+
+- Permissions allowed by a member's role
+- Permissions denied by a channel override
+- Permissions allowed by a channel override
+
+The following pseudoscope demonstrates this:
+
+```py
+def compute_permissions(member):
+    permissions = 0
+
+    for role in member.roles:
+        permissions |= role.permissions
+
+    return permissions
+
+def compute_overrides(member, channel):
+    permissions = compute_permissions(member)
+    allow = 0
+    deny = 0
+
+    for role in member.roles:
+        override = channel.overrides[role]
+        if override:
+            allow |= override.allow
+            deny |= override.deny
+
+    permissions &= ~deny
+    permissions |= allow
+
+    return permissions
+```
 
 ## How to Interpret
 
@@ -41,6 +87,10 @@ Sent in two scenarios:
 - The client recently connected to the WebSocket API. They will receive a Lodge Available event for each lodge they are currently a member of.
 
 The reason is included in the payload.
+
+### Lodge Updated
+
+`WS lodge_updated`
 
 ### Lodge Removed
 
@@ -118,7 +168,7 @@ The component will be created if it doesn't already exist.
 
 `PUT /channels/{id}/messages/{id}`
 
-You must be the author of the message to update it.
+The client must be the author of the message to update it.
 
 ### Message Updated
 
@@ -138,15 +188,13 @@ All require `(view_topic)`
 
 ### Update Topic Component
 
-`PUT /channels/{id}/topic (...)`
+`PUT /channels/{id}/topic (manage_channels)`
 
-Clients with only `(edit_topic)` may only update fields relating to the content.
-
-The client must have `(manage_channels)` to update all other fields. The component will be created if it doesn't already exist.
+The component will be created if it doesn't already exist.
 
 ### Update Topic Component Content
 
-`PUT /channels/{id}/topic (edit_topic)`
+`PUT /channels/{id}/topic/content (edit_topic)`
 
 ### Topic Component Updated
 
@@ -159,3 +207,31 @@ The client must have `(manage_channels)` to update all other fields. The compone
 ### Topic Component Deleted
 
 `WS topic_component_deleted`
+
+## Roles
+
+### Create Role
+
+`POST /lodge/{id}/roles (manage_roles)`
+
+### Role Created
+
+`WS role_created`
+
+### Update Role
+
+`PUT /roles/{id} (manage_roles, ...)`
+
+The client can only modify roles below their highest role. The client can only modify permissions that they themselves have when modifying roles.
+
+### Role Updated
+
+`WS role_updated`
+
+### Delete Role
+
+`DELETE /roles/{id} (manage_roles, ...)`
+
+### Role Deleted
+
+`WS role_deleted`
