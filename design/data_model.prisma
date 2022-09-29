@@ -73,22 +73,13 @@ model Channel {
     position Int
     pinned   Boolean
 
-    compoundComponent CompoundComponent?
-    topicComponent    TopicComponent?
-    textComponent     TextComponent?
+    topicComponent TopicComponent?
+    textComponent  TextComponent?
+    permissions    PermissionOverride[]
 
-    parent      CompoundComponent?   @relation(name: "children", fields: [parentId], references: [id])
-    parentId    String?
-    permissions PermissionOverride[]
-}
-
-model CompoundComponent {
-    id        String   @id
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    channel  Channel   @relation(fields: [id], references: [id])
-    children Channel[] @relation(name: "children")
+    children Channel[] @relation(name: "channel")
+    parent   Channel?  @relation(name: "channel", fields: [parentId], references: [id])
+    parentId String?
 }
 
 model TopicComponent {
