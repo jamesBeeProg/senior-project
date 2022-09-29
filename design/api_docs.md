@@ -166,7 +166,7 @@ The component will be created if it doesn't already exist.
 
 ### Update Message
 
-`PATCH /channels/{id}/messages/{id}`
+`PATCH /channels/{id}/messages/{id} (...)`
 
 The client must be the author of the message to update it.
 
@@ -241,3 +241,31 @@ The client may only modify the positions of roles that are below their highest r
 ### Role Deleted
 
 `WS role_deleted`
+
+## Lodge Member
+
+TODO
+
+### Update Member
+
+`PATCH /members/{id} (...)`
+
+TODO Permissions will depend on which fields are changed
+
+### Update Current Member
+
+`PATCH /members/@me (...)`
+
+TODO
+
+### Add Member Role
+
+`PUT /members/{id}/roles/{id} (manage_roles)`
+
+### Remove Member Role
+
+`DELETE /members/{id}/roles/{id} (manage_roles)`
+
+### Member Updated
+
+`WS member_updated`
