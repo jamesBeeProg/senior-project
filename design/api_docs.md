@@ -248,23 +248,23 @@ TODO
 
 ### Update Member
 
-`PATCH /members/{id} (...)`
+`PATCH /lodges/{id}/members/{id} (...)`
 
 TODO Permissions will depend on which fields are changed
 
 ### Update Current Member
 
-`PATCH /members/@me (...)`
+`PATCH /lodges/{id}/members/@me (...)`
 
 TODO
 
 ### Add Member Role
 
-`PUT /members/{id}/roles/{id} (manage_roles)`
+`PUT /lodges/{id}/members/{id}/roles/{id} (manage_roles)`
 
 ### Remove Member Role
 
-`DELETE /members/{id}/roles/{id} (manage_roles)`
+`DELETE /lodges/{id}/members/{id}/roles/{id} (manage_roles)`
 
 ### Member Updated
 
