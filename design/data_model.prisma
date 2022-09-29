@@ -1,5 +1,5 @@
 model Lodge {
-    id        String   @id @default(uuid())
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -10,7 +10,7 @@ model Lodge {
 }
 
 model User {
-    id        String   @id @default(uuid())
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -22,7 +22,7 @@ model User {
 }
 
 model Member {
-    id        String   @id @default(uuid())
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -35,7 +35,7 @@ model Member {
 }
 
 model Role {
-    id        String   @id @default(uuid())
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -65,7 +65,7 @@ model PermissionOverride {
 }
 
 model Channel {
-    id        String   @id @default(uuid())
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -102,7 +102,7 @@ model TextComponent {
 }
 
 model Message {
-    id        String   @id @default(uuid())
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
