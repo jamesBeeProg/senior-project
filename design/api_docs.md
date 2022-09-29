@@ -70,7 +70,7 @@ The following documentation after this section will consist of the various API e
 The description of each endpoint will begin with an API string. REST API routes will begin with their HTTP method followed by their path. Parameters are indicated with `{}`. WebSocket API events begin with `WS` and are followed by their event ID. Required permissions to use the endpoint are indicated with `()`. Endpoints with non-simple permission requirements are indicated with `(...)`, please check their descriptions for further details. The following are examples:
 
 ```
-PUT /resource/{id}
+PATCH /resource/{id}
 POST /resource (create_resource)
 WS resource_update
 ```
@@ -136,7 +136,7 @@ All require `(view_text)`
 
 ### Update Text Component
 
-`PUT /channels/{id}/text (manage_channels)`
+`PATCH /channels/{id}/text (manage_channels)`
 
 The component will be created if it doesn't already exist.
 
@@ -166,7 +166,7 @@ The component will be created if it doesn't already exist.
 
 ### Update Message
 
-`PUT /channels/{id}/messages/{id}`
+`PATCH /channels/{id}/messages/{id}`
 
 The client must be the author of the message to update it.
 
@@ -188,13 +188,13 @@ All require `(view_topic)`
 
 ### Update Topic Component
 
-`PUT /channels/{id}/topic (manage_channels)`
+`PATCH /channels/{id}/topic (manage_channels)`
 
 The component will be created if it doesn't already exist.
 
 ### Update Topic Component Content
 
-`PUT /channels/{id}/topic/content (edit_topic)`
+`PATCH /channels/{id}/topic/content (edit_topic)`
 
 ### Topic Component Updated
 
@@ -220,9 +220,15 @@ The component will be created if it doesn't already exist.
 
 ### Update Role
 
-`PUT /roles/{id} (manage_roles, ...)`
+`PATCH /roles/{id} (manage_roles, ...)`
 
-The client can only modify roles below their highest role. The client can only modify permissions that they themselves have when modifying roles.
+The client may only modify roles that are below their highest role. The client may only modify permissions that they themselves have when modifying roles.
+
+### Update Role Positions
+
+`PATCH /lodge/{id}/roles (manage_roles, ...)`
+
+The client may only modify the positions of roles that are below their highest role.
 
 ### Role Updated
 
