@@ -4,6 +4,8 @@ This document serves as the initial API design documentation for Splist. The API
 
 ## Permissions
 
+TODO describe how final permissions are calculated
+
 | Permission           | Value      |
 | -------------------- | ---------- |
 | Manage Channels      | `(1 << 1)` |
