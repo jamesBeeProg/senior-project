@@ -1,0 +1,68 @@
+pub mod auth;
+
+use crate::{prisma, util::Prisma};
+use axum::{
+    extract::Path,
+    http::StatusCode,
+    routing::{get, post},
+    Json, Router,
+};
+use serde::{Deserialize, Serialize};
+
+use self::auth::Auth;
+
+pub fn routes() -> Router {
+    Router::new()
+        .route("/@me", get(me))
+        .route("/:id", get(id))
+        .route("/", post(create))
+}
+
+async fn me(Auth(user): Auth) -> Json<UserResponse> {
+    user.into()
+}
+
+async fn id(
+    _: Auth,
+    prisma: Prisma,
+    Path(id): Path<String>,
+) -> Result<Json<UserResponse>, StatusCode> {
+    prisma
+        .user()
+        .find_unique(prisma::user::id::equals(id))
+        .exec()
+        .await
+        .unwrap()
+        .map(|user| user.into())
+        .ok_or(StatusCode::NOT_FOUND)
+}
+
+#[derive(Debug, Deserialize)]
+struct CreateBody {
+    name: String,
+}
+
+async fn create(_: Auth, prisma: Prisma, Json(user): Json<CreateBody>) -> Json<UserResponse> {
+    prisma
+        .user()
+        .create(user.name, vec![])
+        .exec()
+        .await
+        .unwrap()
+        .into()
+}
+
+#[derive(Debug, Serialize)]
+struct UserResponse {
+    id: String,
+    name: String,
+}
+
+impl From<prisma::user::Data> for Json<UserResponse> {
+    fn from(user: prisma::user::Data) -> Self {
+        Json(UserResponse {
+            id: user.id,
+            name: user.name,
+        })
+    }
+}

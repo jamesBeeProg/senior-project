@@ -4,9 +4,17 @@ use axum::{
     extract::{FromRequest, RequestParts},
     Extension,
 };
-use std::{convert::Infallible, sync::Arc};
+use std::{convert::Infallible, ops::Deref, sync::Arc};
 
 pub struct Prisma(pub Arc<PrismaClient>);
+
+impl Deref for Prisma {
+    type Target = Arc<PrismaClient>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 #[async_trait]
 impl<B: Send> FromRequest<B> for Prisma {

@@ -1,79 +1,15 @@
-use crate::{
-    prisma::{self, PrismaClient},
-    util::Prisma,
-};
+use crate::prisma::{self, PrismaClient};
 use axum::{
     async_trait,
-    extract::{FromRequest, Path, RequestParts, TypedHeader},
+    extract::{FromRequest, RequestParts, TypedHeader},
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{get, post},
-    Extension, Json, Router,
+    Extension,
 };
 use headers::{authorization::Bearer, Authorization};
 use jsonwebtoken::{DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
-
-pub fn routes() -> Router {
-    Router::new()
-        .route("/@me", get(get_me))
-        .route("/:id", get(get_id))
-        .route("/", post(create))
-}
-
-#[derive(Debug, Serialize)]
-struct UserResponse {
-    id: String,
-    name: String,
-}
-
-impl From<prisma::user::Data> for Json<UserResponse> {
-    fn from(user: prisma::user::Data) -> Self {
-        Json(UserResponse {
-            id: user.id,
-            name: user.name,
-        })
-    }
-}
-
-async fn get_me(Auth(user): Auth) -> Json<UserResponse> {
-    user.into()
-}
-
-async fn get_id(
-    _: Auth,
-    Prisma(prisma): Prisma,
-    Path(id): Path<String>,
-) -> Result<Json<UserResponse>, StatusCode> {
-    prisma
-        .user()
-        .find_unique(prisma::user::id::equals(id))
-        .exec()
-        .await
-        .unwrap()
-        .map(|user| user.into())
-        .ok_or(StatusCode::NOT_FOUND)
-}
-
-#[derive(Debug, Deserialize)]
-struct CreateBody {
-    name: String,
-}
-
-async fn create(
-    _: Auth,
-    Prisma(prisma): Prisma,
-    Json(user): Json<CreateBody>,
-) -> Json<UserResponse> {
-    prisma
-        .user()
-        .create(user.name, vec![])
-        .exec()
-        .await
-        .unwrap()
-        .into()
-}
+use std::{ops::Deref, sync::Arc};
 
 const SECRET_KEY: &[u8] = b"TODO";
 
@@ -82,7 +18,15 @@ struct Claims {
     sub: String,
 }
 
-struct Auth(prisma::user::Data);
+pub struct Auth(pub prisma::user::Data);
+
+impl Deref for Auth {
+    type Target = prisma::user::Data;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 #[async_trait]
 impl<B: Send> FromRequest<B> for Auth {
