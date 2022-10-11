@@ -1,17 +1,14 @@
-use crate::prisma::{self, PrismaClient};
+use crate::{context::Context, prisma};
 use axum::{
     async_trait,
     extract::{FromRequest, RequestParts, TypedHeader},
     http::StatusCode,
     response::{IntoResponse, Response},
-    Extension,
 };
 use headers::{authorization::Bearer, Authorization};
 use jsonwebtoken::{DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
-use std::{ops::Deref, sync::Arc};
-
-const SECRET_KEY: &[u8] = b"TODO";
+use std::ops::Deref;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
@@ -39,26 +36,19 @@ impl<B: Send> FromRequest<B> for Auth {
                 .await
                 .map_err(|err| err.into_response())?;
 
+        let context = Context::from_request(req).await.unwrap();
+
+        let secret = DecodingKey::from_base64_secret(&context.config.token_secret).unwrap();
         let mut validation = Validation::default();
         validation.set_required_spec_claims(&["sub"]);
 
         // Get the data from the token
-        let token = jsonwebtoken::decode::<Claims>(
-            token.token(),
-            &DecodingKey::from_secret(SECRET_KEY),
-            &validation,
-        )
-        .map_err(|error| {
-            dbg!(error);
-            (StatusCode::UNAUTHORIZED, "Invalid token").into_response()
-        })?;
-
-        let Extension(prisma) = Extension::<Arc<PrismaClient>>::from_request(req)
-            .await
-            .unwrap();
+        let token = jsonwebtoken::decode::<Claims>(token.token(), &secret, &validation)
+            .map_err(|_| (StatusCode::UNAUTHORIZED, "Invalid token").into_response())?;
 
         // Fetch the user
-        let user = prisma
+        let user = context
+            .prisma
             .user()
             .find_unique(prisma::user::id::equals(token.claims.sub))
             .exec()

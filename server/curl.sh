@@ -1,4 +1,4 @@
-curl -iH "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmb28ifQ.YjDcTye_YH85x1Mwukipa3oJxB2OxMH561HNgqjEVcM" \
+curl -iH "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmb28ifQ.odyxBktu5inAbzmZ4j0339L-gBLYedYH2bbH1NctccE" \
     -H "Content-Type: application/json" \
     -X POST \
     localhost:3000/users \

@@ -4,7 +4,6 @@ mod users;
 mod ws;
 
 use axum::{routing::get, Router};
-use std::net::SocketAddr;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -25,17 +24,18 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
+    let context = create_context().await;
+
     // Add base routes
     let app = base()
         // Provide the context
-        .layer(create_context().await)
+        .layer(context.clone())
         // Add logging
         .layer(TraceLayer::new_for_http());
 
     // Run it
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    tracing::debug!("listening on {}", addr);
-    axum::Server::bind(&addr)
+    tracing::debug!("listening on {}", context.config.address);
+    axum::Server::bind(&context.config.address)
         .serve(app.into_make_service())
         .await
         .unwrap();
