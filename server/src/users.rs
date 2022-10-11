@@ -1,10 +1,13 @@
-use crate::prisma::{self, PrismaClient};
+use crate::{
+    prisma::{self, PrismaClient},
+    util::Prisma,
+};
 use axum::{
     async_trait,
     extract::{FromRequest, Path, RequestParts, TypedHeader},
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get, post},
     Extension, Json, Router,
 };
 use headers::{authorization::Bearer, Authorization};
@@ -16,25 +19,32 @@ pub fn routes() -> Router {
     Router::new()
         .route("/@me", get(get_me))
         .route("/:id", get(get_id))
+        .route("/", post(create))
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize)]
 struct UserResponse {
     id: String,
     name: String,
 }
 
+impl From<prisma::user::Data> for Json<UserResponse> {
+    fn from(user: prisma::user::Data) -> Self {
+        Json(UserResponse {
+            id: user.id,
+            name: user.name,
+        })
+    }
+}
+
 async fn get_me(Auth(user): Auth) -> Json<UserResponse> {
-    Json(UserResponse {
-        id: user.id,
-        name: user.name,
-    })
+    user.into()
 }
 
 async fn get_id(
     _: Auth,
+    Prisma(prisma): Prisma,
     Path(id): Path<String>,
-    Extension(prisma): Extension<Arc<PrismaClient>>,
 ) -> Result<Json<UserResponse>, StatusCode> {
     prisma
         .user()
@@ -42,13 +52,27 @@ async fn get_id(
         .exec()
         .await
         .unwrap()
-        .map(|user| {
-            Json(UserResponse {
-                id: user.id,
-                name: user.name,
-            })
-        })
+        .map(|user| user.into())
         .ok_or(StatusCode::NOT_FOUND)
+}
+
+#[derive(Debug, Deserialize)]
+struct CreateBody {
+    name: String,
+}
+
+async fn create(
+    _: Auth,
+    Prisma(prisma): Prisma,
+    Json(user): Json<CreateBody>,
+) -> Json<UserResponse> {
+    prisma
+        .user()
+        .create(user.name, vec![])
+        .exec()
+        .await
+        .unwrap()
+        .into()
 }
 
 const SECRET_KEY: &[u8] = b"TODO";

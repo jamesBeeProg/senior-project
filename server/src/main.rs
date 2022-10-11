@@ -1,10 +1,11 @@
 mod prisma;
 mod users;
+mod util;
 mod ws;
 
 use axum::{routing::get, Extension, Router};
 use std::{net::SocketAddr, sync::Arc};
-use tokio::sync::broadcast::{self};
+use tokio::sync::broadcast;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
