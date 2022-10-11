@@ -1,13 +1,20 @@
+mod context;
 mod prisma;
 mod users;
-mod util;
 mod ws;
 
-use axum::{routing::get, Extension, Router};
-use std::{net::SocketAddr, sync::Arc};
-use tokio::sync::broadcast;
+use axum::{routing::get, Router};
+use std::net::SocketAddr;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+use crate::context::create_context;
+
+fn base() -> Router {
+    Router::new()
+        .route("/ws", get(ws::ws_handler))
+        .nest("/users", users::routes())
+}
 
 #[tokio::main]
 async fn main() {
@@ -18,20 +25,14 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let client = Arc::new(prisma::new_client().await.unwrap());
+    // Add base routes
+    let app = base()
+        // Provide the context
+        .layer(create_context().await)
+        // Add logging
+        .layer(TraceLayer::new_for_http());
 
-    let (tx, _) = broadcast::channel::<String>(100);
-
-    // build our application with some routes
-    let app = Router::new()
-        .route("/ws", get(ws::ws_handler))
-        .nest("/users", users::routes())
-        // logging so we can see whats going on
-        .layer(TraceLayer::new_for_http())
-        .layer(Extension(client))
-        .layer(Extension(tx));
-
-    // run it with hyper
+    // Run it
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     tracing::debug!("listening on {}", addr);
     axum::Server::bind(&addr)

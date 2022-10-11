@@ -1,6 +1,6 @@
 pub mod auth;
 
-use crate::{prisma, util::Prisma};
+use crate::{context::Context, prisma};
 use axum::{
     extract::Path,
     http::StatusCode,
@@ -24,10 +24,11 @@ async fn me(Auth(user): Auth) -> Json<UserResponse> {
 
 async fn id(
     _: Auth,
-    prisma: Prisma,
+    context: Context,
     Path(id): Path<String>,
 ) -> Result<Json<UserResponse>, StatusCode> {
-    prisma
+    context
+        .prisma
         .user()
         .find_unique(prisma::user::id::equals(id))
         .exec()
@@ -42,8 +43,9 @@ struct CreateBody {
     name: String,
 }
 
-async fn create(_: Auth, prisma: Prisma, Json(user): Json<CreateBody>) -> Json<UserResponse> {
-    prisma
+async fn create(_: Auth, context: Context, Json(user): Json<CreateBody>) -> Json<UserResponse> {
+    context
+        .prisma
         .user()
         .create(user.name, vec![])
         .exec()
