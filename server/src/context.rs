@@ -6,30 +6,40 @@ use axum::{
 };
 use clap::Parser;
 use serde::Deserialize;
-use std::{convert::Infallible, net::SocketAddr, path::PathBuf, sync::Arc};
+use std::{convert::Infallible, net::SocketAddr, ops::Deref, path::PathBuf, sync::Arc};
 use tokio::sync::broadcast::{self, Sender};
 
-pub async fn create_context() -> Extension<Context> {
+pub async fn create_context() -> Context {
     let args = Args::parse();
     let config = tokio::fs::read_to_string(&args.config).await.unwrap();
-    let config = Arc::new(serde_json::from_str(&config).unwrap());
+    let config = serde_json::from_str(&config).unwrap();
 
-    let prisma = Arc::new(prisma::new_client().await.unwrap());
+    let prisma = prisma::new_client().await.unwrap();
 
     let (events, _) = broadcast::channel::<String>(100);
 
-    Extension(Context {
+    Context(Arc::new(InnerContext {
         prisma,
         events,
         config,
-    })
+    }))
+}
+
+#[derive(Debug)]
+pub struct InnerContext {
+    pub prisma: PrismaClient,
+    pub events: Sender<String>,
+    pub config: Config,
 }
 
 #[derive(Debug, Clone)]
-pub struct Context {
-    pub prisma: Arc<PrismaClient>,
-    pub events: Sender<String>,
-    pub config: Arc<Config>,
+pub struct Context(Arc<InnerContext>);
+
+impl Deref for Context {
+    type Target = InnerContext;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 #[async_trait]

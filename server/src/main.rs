@@ -3,7 +3,7 @@ mod prisma;
 mod users;
 mod ws;
 
-use axum::{routing::get, Router};
+use axum::{routing::get, Extension, Router};
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -29,7 +29,7 @@ async fn main() {
     // Add base routes
     let app = base()
         // Provide the context
-        .layer(context.clone())
+        .layer(Extension(context.clone()))
         // Add logging
         .layer(TraceLayer::new_for_http());
 
