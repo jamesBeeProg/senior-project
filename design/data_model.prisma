@@ -14,8 +14,7 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    username String
-    password String
+    name String
 
     memberships Member[]
     messages    Message[]

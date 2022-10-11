@@ -1,4 +1,5 @@
 mod prisma;
+mod users;
 
 use axum::{
     extract::{
@@ -13,7 +14,7 @@ use futures_util::{stream::StreamExt, SinkExt};
 use prisma::PrismaClient;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::broadcast::{self, Sender};
-use tower_http::trace::{DefaultMakeSpan, TraceLayer};
+use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
@@ -32,11 +33,9 @@ async fn main() {
     // build our application with some routes
     let app = Router::new()
         .route("/ws", get(ws_handler))
+        .nest("/users", users::routes())
         // logging so we can see whats going on
-        .layer(
-            TraceLayer::new_for_http()
-                .make_span_with(DefaultMakeSpan::default().include_headers(true)),
-        )
+        .layer(TraceLayer::new_for_http())
         .layer(Extension(client))
         .layer(Extension(tx));
 
