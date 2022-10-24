@@ -2,7 +2,7 @@
 
 This document serves as the initial API design documentation for Splist. The API is the contract between the server and client and describes the capabilities the server is expected to accommodate.
 
-## Permissions
+## Permissions (outdated?)
 
 | Permission           | Value      |
 | -------------------- | ---------- |
@@ -16,7 +16,7 @@ This document serves as the initial API design documentation for Splist. The API
 | Edit Topic           | `(1 << 8)` |
 | Manage Roles         | `(1 << 9)` |
 
-### Permissions and the Role Hierarchy
+### Permissions and the Role Hierarchy (outdated?)
 
 Permissions largely ignore the role hierarchy, except in these specific circumstances:
 
@@ -27,7 +27,7 @@ Permissions largely ignore the role hierarchy, except in these specific circumst
 
 Otherwise, permissions ignore the role hierarchy.
 
-### Permission Priority
+### Permission Priority (outdated?)
 
 There may be a case where a member would have conflicting permissions. In that case, permissions are calculated in the following order:
 
@@ -75,197 +75,70 @@ POST /resource (create_resource)
 WS resource_update
 ```
 
-## Lodge
+## Users
 
-### Lodge Available
+### Manage User
 
-`WS lodge_available`
+`POST /users/{id}`
+`PUT /users/{id}`
+`DELETE /users/{id}`
 
-Sent in two scenarios:
+### User Updated
 
-- The client becomes a member of a new lodge.
-- The client recently connected to the WebSocket API. They will receive a Lodge Available event for each lodge they are currently a member of.
+`WS user_updated`
 
-The reason is included in the payload.
+## Permit
 
-### Lodge Updated
+### Manage Permit
 
-`WS lodge_updated`
+`POST /permits/{id}`
+`PUT /permits/{id}`
+`DELETE /permits/{id}`
 
-### Lodge Removed
+### Permit Updated
 
-`WS lodge_removed`
+`WS permit_updated`
 
-Client was removed from a lodge. The reason is included in the payload.
+## Role
 
-## Channel
+### Manage Role
 
-### Create Channel
-
-`POST /lodges/{id}/channels (manage_channels)`
-
-### Channel Created
-
-`WS channel_created`
-
-### Update Channel
-
-`PATCH /channels/{id} (manage_channels)`
-
-### Channel Updated
-
-`WS channel_updated`
-
-### Delete Channel
-
-`DELETE /channels/{id} (manage_channels)`
-
-### Channel Deleted
-
-`WS channel_deleted`
-
-### Get Channel
-
-`GET /channels/{id} (...)`
-
-Requires at least one of `(view_text)` or `(view_topic)`. Returns general channel information as well as the channel components corresponding to the client's permissions.
-
-## Text Components
-
-All require `(view_text)`
-
-### Update Text Component
-
-`PATCH /channels/{id}/text (manage_channels)`
-
-The component will be created if it doesn't already exist.
-
-### Text Component Updated
-
-`WS text_component_updated`
-
-### Delete Text Component
-
-`DELETE /channels/{id}/text (manage_channels)`
-
-### Text Component Deleted
-
-`WS text_component_deleted`
-
-### Create Message
-
-`POST /channels/{id}/messages (send_messages)`
-
-### Message Created
-
-`WS message_created (read_messages)`
-
-### Get Channel Messages
-
-`GET /channels/{id}/messages (read_message_history)`
-
-### Update Message
-
-`PATCH /channels/{id}/messages/{id} (...)`
-
-The client must be the author of the message to update it.
-
-### Message Updated
-
-`WS message_updated`
-
-### Delete Message
-
-`DELETE /channels/{id}/messages/{id} (manage_messages)`
-
-### Message Deleted
-
-`WS message_deleted`
-
-## Topic Components
-
-All require `(view_topic)`
-
-### Update Topic Component
-
-`PATCH /channels/{id}/topic (manage_channels)`
-
-The component will be created if it doesn't already exist.
-
-### Update Topic Component Content
-
-`PATCH /channels/{id}/topic/content (edit_topic)`
-
-### Topic Component Updated
-
-`WS topic_component_updated`
-
-### Delete Topic Component
-
-`DELETE /channels/{id}/topic (manage_channels)`
-
-### Topic Component Deleted
-
-`WS topic_component_deleted`
-
-## Roles
-
-### Create Role
-
-`POST /lodge/{id}/roles (manage_roles)`
-
-### Role Created
-
-`WS role_created`
-
-### Update Role
-
-`PATCH /roles/{id} (manage_roles, ...)`
-
-The client may only modify roles that are below their highest role. The client may only modify permissions that they themselves have when modifying roles.
-
-### Update Role Positions
-
-`PATCH /lodge/{id}/roles (manage_roles, ...)`
-
-The client may only modify the positions of roles that are below their highest role.
+`POST /roles/{id}`
+`PUT /roles/{id}`
+`DELETE /roles/{id}`
 
 ### Role Updated
 
 `WS role_updated`
 
-### Delete Role
+## Thread
 
-`DELETE /roles/{id} (manage_roles, ...)`
+### Manage Thread
 
-### Role Deleted
+`POST /threads/{id}`
+`PUT /threads/{id}`
+`DELETE /threads/{id}`
 
-`WS role_deleted`
+### Thread Updated
 
-## Lodge Member
+`WS thread_updated`
 
-TODO
+### Threads Sync
 
-### Update Member
+`WS threads_sync`
 
-`PATCH /lodges/{id}/members/{id} (...)`
+## Message
 
-TODO Permissions will depend on which fields are changed
+### Get Messages
 
-### Update Current Member
+`GET /messages/{id}/before?limit={limit}`
 
-`PATCH /lodges/{id}/members/@me (...)`
+### Manage Message
 
-TODO
+`POST /messages/{id}`
+`PUT /messages/{id}`
+`DELETE /messages/{id}`
 
-### Add Member Role
+### Message Updated
 
-`PUT /lodges/{id}/members/{id}/roles/{id} (manage_roles)`
-
-### Remove Member Role
-
-`DELETE /lodges/{id}/members/{id}/roles/{id} (manage_roles)`
-
-### Member Updated
-
-`WS member_updated`
+`WS message_updated`

@@ -44,8 +44,8 @@ model Thread {
     messages Message[]
     permits  Permit[]
 
-    children Thread[] @relation(name: "thread")
-    parent   Thread?  @relation(name: "thread", fields: [parentId], references: [id])
+    children Thread[] @relation(name: "thread_tree")
+    parent   Thread?  @relation(name: "thread_tree", fields: [parentId], references: [id])
     parentId String?
 }
 
@@ -60,4 +60,7 @@ model Message {
     authorId String?
     thread   Thread? @relation(fields: [threadId], references: [id])
     threadId String?
+
+    parents  Message[] @relation(name: "message_replies")
+    children Message[] @relation(name: "message_replies")
 }
