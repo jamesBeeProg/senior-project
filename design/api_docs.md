@@ -2,66 +2,46 @@
 
 This document serves as the initial API design documentation for Splist. The API is the contract between the server and client and describes the capabilities the server is expected to accommodate.
 
-## Permissions (outdated?)
+## Permissions
 
-| Permission           | Value      |
-| -------------------- | ---------- |
-| Manage Channels      | `(1 << 1)` |
-| View Text            | `(1 << 2)` |
-| Send Messages        | `(1 << 3)` |
-| Read Messages        | `(1 << 4)` |
-| Read Message History | `(1 << 5)` |
-| Manage Messages      | `(1 << 6)` |
-| View Topic           | `(1 << 7)` |
-| Edit Topic           | `(1 << 8)` |
-| Manage Roles         | `(1 << 9)` |
+| Permission     | Value             | Notes  | Description                                   |
+| -------------- | ----------------- | ------ | --------------------------------------------- |
+| Access Threads | `access_threads`  | ---    | Client gains information about threads        |
+| Manage Threads | `manage_threads`  | Note 1 | Client can create, modify, and delete threads |
+| Send Messages  | `send_messages`   | Note 1 | Client can send messages                      |
+| Read Messages  | `read_messages`   | Note 1 | Client can read message history               |
+| Manage Message | `manage_messages` | Note 1 | Client can delete messages                    |
+| Manage Roles   | `manage_roles`    | Note 2 | Client can create, modify, and delete roles   |
+| Manage Members | `manage_members`  | Note 2 | Client can add or remove a user to a role     |
 
-### Permissions and the Role Hierarchy (outdated?)
+Notes:
+
+1. The client must additionally have Access Threads in the context for the permission to take effect.
+2. The client can only do these actions on entities that rank below the client.
+
+### Rank Terminology
+
+Here is what the term "rank" means in regards to the following entities:
+
+- Roles: The role's position in the role hierarchy.
+- Users: The position of the highest role the user is a member of.
+- Operator Users: Can only be outranked by other operators.
+
+### Operators
+
+Operators are special users that always have every permission regardless of permits. Additionally, they can perform actions that regular permissions couldn't grant.
+
+## Permissions and the Role Hierarchy
 
 Permissions largely ignore the role hierarchy, except in these specific circumstances:
 
-- A client may only grant members with roles that are lower than the client's highest role.
+- A client may only add or remove members from roles that are lower than the client's highest role.
 - A client may only modify roles lower than their highest role.
-- A client may only modify permissions they themselves have (for both roles and channel overrides).
 - A client may only modify members who's highest role is lower than the client's highest role.
 
+- A client may only modify role memberships
+
 Otherwise, permissions ignore the role hierarchy.
-
-### Permission Priority (outdated?)
-
-There may be a case where a member would have conflicting permissions. In that case, permissions are calculated in the following order:
-
-- Permissions allowed by a member's role
-- Permissions denied by a channel override
-- Permissions allowed by a channel override
-
-The following pseudoscope demonstrates this:
-
-```py
-def compute_permissions(member):
-    permissions = 0
-
-    for role in member.roles:
-        permissions |= role.permissions
-
-    return permissions
-
-def compute_overrides(member, channel):
-    permissions = compute_permissions(member)
-    allow = 0
-    deny = 0
-
-    for role in member.roles:
-        override = channel.overrides[role]
-        if override:
-            allow |= override.allow
-            deny |= override.deny
-
-    permissions &= ~deny
-    permissions |= allow
-
-    return permissions
-```
 
 ## How to Interpret
 
@@ -79,9 +59,9 @@ WS resource_update
 
 ### Manage User
 
-`POST /users/{id}`
-`PUT /users/{id}`
-`DELETE /users/{id}`
+`POST /users/{id} (operator)`
+`PUT /users/{id} (operator)`
+`DELETE /users/{id} (operator)`
 
 ### User Updated
 
@@ -91,9 +71,9 @@ WS resource_update
 
 ### Manage Permit
 
-`POST /permits/{id}`
-`PUT /permits/{id}`
-`DELETE /permits/{id}`
+`POST /permits/{id} (operator)`
+`PUT /permits/{id} (operator)`
+`DELETE /permits/{id} (operator)`
 
 ### Permit Updated
 
@@ -103,9 +83,9 @@ WS resource_update
 
 ### Manage Role
 
-`POST /roles/{id}`
-`PUT /roles/{id}`
-`DELETE /roles/{id}`
+`POST /roles/{id} (manage_roles)`
+`PUT /roles/{id} (manage_roles)`
+`DELETE /roles/{id} (manage_roles)`
 
 ### Role Updated
 
@@ -115,29 +95,43 @@ WS resource_update
 
 ### Manage Thread
 
-`POST /threads/{id}`
-`PUT /threads/{id}`
-`DELETE /threads/{id}`
+`POST /threads/{id} (manage_threads)`
+`PUT /threads/{id} (manage_threads)`
+`DELETE /threads/{id} (manage_threads)`
 
 ### Thread Updated
 
-`WS thread_updated`
+`WS thread_updated (access_threads)`
+
+Sent to clients when a thread is created, modified, or deleted. They must have access to the thread to receive this event.
 
 ### Threads Sync
 
 `WS threads_sync`
 
+Sent to clients when they gain or lose access to threads.
+
 ## Message
 
 ### Get Messages
 
-`GET /messages/{id}/before?limit={limit}`
+`GET /messages/{id}/before?limit={limit} (read_messages)`
 
-### Manage Message
+### Send Message
 
-`POST /messages/{id}`
-`PUT /messages/{id}`
-`DELETE /messages/{id}`
+`POST /messages/{id} (send_messages)`
+
+### Modify Message
+
+`PUT /messages/{id} (...)`
+
+The client must be the original author of the message.
+
+### Delete Message
+
+`DELETE /messages/{id} (manage_messages, ...)`
+
+`manage_messages` is not required if the client is the original author of the message.
 
 ### Message Updated
 
