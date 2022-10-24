@@ -95,7 +95,7 @@ Sent to clients when they gain or lose access to threads.
 
 ### Get Messages
 
-`GET /messages/?before={id}&amount={amount} (read_messages)`
+`GET /thread/{id}/messages/?before={id}&amount={amount} (read_messages)`
 
 ### Send Message
 

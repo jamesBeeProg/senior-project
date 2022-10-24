@@ -1,6 +1,8 @@
 mod context;
+mod messages;
 mod prisma;
 mod users;
+mod util;
 mod ws;
 
 use axum::{routing::get, Extension, Router};
@@ -13,6 +15,7 @@ fn base() -> Router {
     Router::new()
         .route("/ws", get(ws::ws_handler))
         .nest("/users", users::routes())
+        .nest("/messages", messages::routes())
 }
 
 #[tokio::main]
