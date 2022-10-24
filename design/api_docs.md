@@ -31,21 +31,7 @@ Here is what the term "rank" means in regards to the following entities:
 
 Operators are special users that always have every permission regardless of permits. Additionally, they can perform actions that regular permissions couldn't grant.
 
-## Permissions and the Role Hierarchy
-
-Permissions largely ignore the role hierarchy, except in these specific circumstances:
-
-- A client may only add or remove members from roles that are lower than the client's highest role.
-- A client may only modify roles lower than their highest role.
-- A client may only modify members who's highest role is lower than the client's highest role.
-
-- A client may only modify role memberships
-
-Otherwise, permissions ignore the role hierarchy.
-
 ## How to Interpret
-
-The following documentation after this section will consist of the various API endpoints and their descriptions. Each endpoint consists of a title, an API string, and optionally further description. They are grouped into larger categories to help with viewing. Use this section to understand how to interpret the API endpoints.
 
 The description of each endpoint will begin with an API string. REST API routes will begin with their HTTP method followed by their path. Parameters are indicated with `{}`. WebSocket API events begin with `WS` and are followed by their event ID. Required permissions to use the endpoint are indicated with `()`. Endpoints with non-simple permission requirements are indicated with `(...)`, please check their descriptions for further details. The following are examples:
 
