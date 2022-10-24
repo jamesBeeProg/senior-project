@@ -4,6 +4,14 @@ This document serves as the initial API design documentation for Splist. The API
 
 ## Permissions
 
+Permissions allow a user to perform actions. All permissions are deny by default and must be granted using permits. Permits consist of a list of permissions they grant as well as role and channel conditions. Empty conditions means the permit applies to everyone and everywhere respectively.
+
+Operators are special users that always have every permission regardless of permits. Additionally, certain highly-sensitive actions require Operator as a permission directly.
+
+A role's rank is it's position in the role hierarchy. A user's rank is highest rank out of the roles the user has. Operators can only be outranked by other operators.
+
+The following is a table of all permissions:
+
 | Permission     | Identifier        | Notes  | Description                                    |
 | -------------- | ----------------- | ------ | ---------------------------------------------- |
 | Access Threads | `access_threads`  | ------ | Client may gain information about threads      |
@@ -14,22 +22,8 @@ This document serves as the initial API design documentation for Splist. The API
 | Manage Roles   | `manage_roles`    | Note 2 | Client may create, modify, or delete roles     |
 | Manage Members | `manage_members`  | Note 2 | Client may add or remove from a role's members |
 
-Notes:
-
-1. The client must additionally have Access Threads in the context for the permission to take effect.
-2. The client can only do these actions on entities that rank below the client.
-
-### Rank Terminology
-
-Here is what the term "rank" means in regards to the following entities:
-
-- Roles: The role's position in the role hierarchy.
-- Users: The position of the highest role the user is a member of.
-- Operator Users: Can only be outranked by other operators.
-
-### Operators
-
-Operators are special users that always have every permission regardless of permits. Additionally, they can perform actions that regular permissions couldn't grant.
+1. The client must additionally have Access Threads to perform any actions.
+2. The client may only perform these actions on entities that rank below the client.
 
 ## How to Interpret
 
@@ -121,4 +115,4 @@ The client must be the original author of the message.
 
 ### Message Updated
 
-`WS message_updated`
+`WS message_updated (read_messages)`
