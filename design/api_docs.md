@@ -4,15 +4,15 @@ This document serves as the initial API design documentation for Splist. The API
 
 ## Permissions
 
-| Permission     | Value             | Notes  | Description                                   |
-| -------------- | ----------------- | ------ | --------------------------------------------- |
-| Access Threads | `access_threads`  | ---    | Client gains information about threads        |
-| Manage Threads | `manage_threads`  | Note 1 | Client can create, modify, and delete threads |
-| Send Messages  | `send_messages`   | Note 1 | Client can send messages                      |
-| Read Messages  | `read_messages`   | Note 1 | Client can read message history               |
-| Manage Message | `manage_messages` | Note 1 | Client can delete messages                    |
-| Manage Roles   | `manage_roles`    | Note 2 | Client can create, modify, and delete roles   |
-| Manage Members | `manage_members`  | Note 2 | Client can add or remove a user to a role     |
+| Permission     | Identifier        | Notes  | Description                                    |
+| -------------- | ----------------- | ------ | ---------------------------------------------- |
+| Access Threads | `access_threads`  | ------ | Client may gain information about threads      |
+| Manage Threads | `manage_threads`  | Note 1 | Client may create, modify, or delete threads   |
+| Send Messages  | `send_messages`   | Note 1 | Client may send messages                       |
+| Read Messages  | `read_messages`   | Note 1 | Client may receive messages and read history   |
+| Manage Message | `manage_messages` | Note 1 | Client may delete others' messages             |
+| Manage Roles   | `manage_roles`    | Note 2 | Client may create, modify, or delete roles     |
+| Manage Members | `manage_members`  | Note 2 | Client may add or remove from a role's members |
 
 Notes:
 
