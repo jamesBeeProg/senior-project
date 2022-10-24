@@ -17,7 +17,7 @@ async fn get_messages(context: Context) -> Json<Vec<MessageResponse>> {
         .prisma
         .message()
         .find_many(vec![])
-        .order_by(prisma::message::id::order(Direction::Desc))
+        .order_by(prisma::message::id::order(Direction::Asc))
         .take(20)
         .exec()
         .await
@@ -29,17 +29,13 @@ async fn get_messages(context: Context) -> Json<Vec<MessageResponse>> {
 }
 
 async fn send_message(
-    Auth(author): Auth,
     context: Context,
     Json(body): Json<SendMessageBody>,
 ) -> Json<MessageResponse> {
     let message = context
         .prisma
         .message()
-        .create(
-            body.content,
-            vec![prisma::message::author_id::set(Some(author.id))],
-        )
+        .create(body.content, vec![])
         .exec()
         .await
         .unwrap();

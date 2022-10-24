@@ -6,7 +6,10 @@ mod util;
 mod ws;
 
 use axum::{routing::get, Extension, Router};
-use tower_http::trace::TraceLayer;
+use tower_http::{
+    cors::{Any, CorsLayer},
+    trace::TraceLayer,
+};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::context::create_context;
@@ -29,12 +32,18 @@ async fn main() {
 
     let context = create_context().await;
 
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_headers(Any)
+        .allow_methods(Any);
+
     // Add base routes
     let app = base()
         // Provide the context
         .layer(Extension(context.clone()))
         // Add logging
-        .layer(TraceLayer::new_for_http());
+        .layer(TraceLayer::new_for_http())
+        .layer(cors);
 
     // Run it
     tracing::debug!("listening on {}", context.config.address);
