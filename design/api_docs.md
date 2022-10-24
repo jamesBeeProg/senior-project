@@ -39,7 +39,7 @@ WS resource_update
 
 ### Manage User
 
-`POST /users/{id} (operator)`
+`POST /users (operator)`
 `PUT /users/{id} (operator)`
 `DELETE /users/{id} (operator)`
 
@@ -47,11 +47,11 @@ WS resource_update
 
 `WS user_updated`
 
-## Permit
+## Permits
 
 ### Manage Permit
 
-`POST /permits/{id} (operator)`
+`POST /permits (operator)`
 `PUT /permits/{id} (operator)`
 `DELETE /permits/{id} (operator)`
 
@@ -59,11 +59,11 @@ WS resource_update
 
 `WS permit_updated`
 
-## Role
+## Roles
 
 ### Manage Role
 
-`POST /roles/{id} (manage_roles)`
+`POST /roles (manage_roles)`
 `PUT /roles/{id} (manage_roles)`
 `DELETE /roles/{id} (manage_roles)`
 
@@ -71,11 +71,11 @@ WS resource_update
 
 `WS role_updated`
 
-## Thread
+## Threads
 
 ### Manage Thread
 
-`POST /threads/{id} (manage_threads)`
+`POST /threads (manage_threads)`
 `PUT /threads/{id} (manage_threads)`
 `DELETE /threads/{id} (manage_threads)`
 
@@ -91,15 +91,15 @@ Sent to clients when a thread is created, modified, or deleted. They must have a
 
 Sent to clients when they gain or lose access to threads.
 
-## Message
+## Messages
 
 ### Get Messages
 
-`GET /messages/{id}/before?limit={limit} (read_messages)`
+`GET /messages/?before={id}&amount={amount} (read_messages)`
 
 ### Send Message
 
-`POST /messages/{id} (send_messages)`
+`POST /thread/{id}/messages (send_messages)`
 
 ### Modify Message
 
