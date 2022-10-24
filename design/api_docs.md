@@ -12,18 +12,18 @@ A role's rank is it's position in the role hierarchy. A user's rank is highest r
 
 The following is a table of all permissions:
 
-| Permission     | Identifier        | Notes  | Description                                    |
-| -------------- | ----------------- | ------ | ---------------------------------------------- |
-| Access Threads | `access_threads`  | ------ | Client may gain information about threads      |
-| Manage Threads | `manage_threads`  | Note 1 | Client may create, modify, or delete threads   |
-| Send Messages  | `send_messages`   | Note 1 | Client may send messages                       |
-| Read Messages  | `read_messages`   | Note 1 | Client may receive messages and read history   |
-| Manage Message | `manage_messages` | Note 1 | Client may delete others' messages             |
-| Manage Roles   | `manage_roles`    | Note 2 | Client may create, modify, or delete roles     |
-| Manage Members | `manage_members`  | Note 2 | Client may add or remove from a role's members |
+| Permission      | Identifier        | Notes  | Description                                    |
+| --------------- | ----------------- | ------ | ---------------------------------------------- |
+| Access Threads  | `access_threads`  | ------ | Client may gain information about threads      |
+| Manage Threads  | `manage_threads`  | Note 1 | Client may create, modify, or delete threads   |
+| Send Messages   | `send_messages`   | Note 1 | Client may send messages                       |
+| Read Messages   | `read_messages`   | Note 1 | Client may receive messages and read history   |
+| Manage Messages | `manage_messages` | Note 1 | Client may delete others' messages             |
+| Manage Roles    | `manage_roles`    | Note 2 | Client may create, modify, or delete roles     |
+| Manage Members  | `manage_members`  | Note 2 | Client may add or remove from a role's members |
 
-1. The client must additionally have Access Threads to perform any actions.
-2. The client may only perform these actions on entities that rank below the client.
+1. The client must additionally have Access Threads to perform actions.
+2. The client may only perform actions on things that rank below the client.
 
 ## How to Interpret
 
