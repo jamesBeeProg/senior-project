@@ -1,14 +1,3 @@
-model Lodge {
-    id        String   @id
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    name String
-
-    members Member[]
-    roles   Role[]
-}
-
 model User {
     id        String   @id
     createdAt DateTime @default(now())
@@ -16,34 +5,20 @@ model User {
 
     name String
 
-    memberships Member[]
-    messages    Message[]
+    messages Message[]
+    roles    Role[]
 }
 
-model Member {
-    userId    String
-    lodgeId   String
+model Permit {
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    user  User         @relation(fields: [userId], references: [id])
-    lodge Lodge        @relation(fields: [lodgeId], references: [id])
-    roles MemberRole[]
+    description String
+    permissions String
 
-    @@id([userId, lodgeId])
-}
-
-model MemberRole {
-    userId    String
-    lodgeId   String
-    roleId    String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    member Member? @relation(fields: [userId, lodgeId], references: [userId, lodgeId])
-    role   Role    @relation(fields: [roleId], references: [id])
-
-    @@id([userId, lodgeId, roleId])
+    rolesRequired   Role[]
+    threadsRequired Thread[]
 }
 
 model Role {
@@ -51,32 +26,13 @@ model Role {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    name        String
-    permissions String
+    name String
 
-    lodge   Lodge        @relation(fields: [lodgeId], references: [id])
-    lodgeId String
-    members MemberRole[]
-
-    overrides PermissionOverride[]
+    users   User[]
+    permits Permit[]
 }
 
-model PermissionOverride {
-    channelId String
-    roleId    String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    allow String
-    deny  String
-
-    channel Channel @relation(fields: [channelId], references: [id])
-    role    Role    @relation(fields: [roleId], references: [id])
-
-    @@id([channelId, roleId])
-}
-
-model Channel {
+model Thread {
     id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -85,32 +41,12 @@ model Channel {
     position Int
     pinned   Boolean
 
-    topicComponent TopicComponent?
-    textComponent  TextComponent?
-    permissions    PermissionOverride[]
-
-    children Channel[] @relation(name: "channel")
-    parent   Channel?  @relation(name: "channel", fields: [parentId], references: [id])
-    parentId String?
-}
-
-model TopicComponent {
-    id        String   @id
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    content String
-
-    channel Channel @relation(fields: [id], references: [id])
-}
-
-model TextComponent {
-    id        String   @id
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    channel  Channel   @relation(fields: [id], references: [id])
     messages Message[]
+    permits  Permit[]
+
+    children Thread[] @relation(name: "thread")
+    parent   Thread?  @relation(name: "thread", fields: [parentId], references: [id])
+    parentId String?
 }
 
 model Message {
@@ -120,8 +56,8 @@ model Message {
 
     content String
 
-    textComponent   TextComponent @relation(fields: [textComponentId], references: [id])
-    textComponentId String
-    author          User?         @relation(fields: [authorId], references: [id])
-    authorId        String?
+    author   User?   @relation(fields: [authorId], references: [id])
+    authorId String?
+    thread   Thread? @relation(fields: [threadId], references: [id])
+    threadId String?
 }
