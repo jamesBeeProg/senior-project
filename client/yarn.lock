@@ -1522,6 +1522,7 @@ __metadata:
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-use-websocket: "npm:^4.2.0"
     typescript: "npm:^4.8.4"
     zustand: "npm:^4.1.1"
   languageName: unknown
@@ -3682,6 +3683,16 @@ __metadata:
   version: 0.9.0
   resolution: "react-refresh@npm:0.9.0"
   checksum: 8f7d5e8884ad205633275f201b44589baa1b48c8ad81b1b06b936713f71dcd08a5955346213bd0188e3b539961896fa980bac9162ce4b3aa14cae7e02c24cbd6
+  languageName: node
+  linkType: hard
+
+"react-use-websocket@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "react-use-websocket@npm:4.2.0"
+  peerDependencies:
+    react: ">= 18.0.0"
+    react-dom: ">= 18.0.0"
+  checksum: 931bfeae7cc898cbb348d2aa0e210a8c5ac59e7df8d7ecc65f7f3a6a4beabcd2016c10a64d6086f19557e09eae24170695452de88263e1ad622aa93aa58e7815
   languageName: node
   linkType: hard
 
