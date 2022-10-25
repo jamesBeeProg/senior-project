@@ -40,7 +40,7 @@ export const Messages: FC = () => {
                         <ListItemAvatar>
                             <Avatar>U</Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary="User" secondary="some id" />
+                        <ListItemText primary="User" secondary="c1234567890" />
                         <ListItemText primary={content} secondary={id} />
                     </ListItem>
                 ))}
