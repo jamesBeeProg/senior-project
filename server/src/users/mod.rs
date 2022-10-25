@@ -9,13 +9,18 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 
-use self::auth::Auth;
+use self::auth::{encode_token, Auth};
 
 pub fn routes() -> Router {
     Router::new()
         .route("/@me", get(me))
         .route("/:id", get(id))
         .route("/", post(create))
+        .route("/:id/token", get(token))
+}
+
+async fn token(context: Context, Path(user_id): Path<String>) -> String {
+    encode_token(user_id, &context.config.token_secret)
 }
 
 async fn me(Auth(user): Auth) -> Json<UserResponse> {

@@ -1,4 +1,4 @@
-use crate::{context::Context, prisma, ws::Event};
+use crate::{context::Context, prisma, users::auth::Auth, ws::Event};
 use axum::{
     routing::{get, post},
     Json, Router,
@@ -12,7 +12,7 @@ pub fn routes() -> Router {
         .route("/", post(send_message))
 }
 
-async fn get_messages(context: Context) -> Json<Vec<MessageResponse>> {
+async fn get_messages(_: Auth, context: Context) -> Json<Vec<MessageResponse>> {
     let messages = context
         .prisma
         .message()
