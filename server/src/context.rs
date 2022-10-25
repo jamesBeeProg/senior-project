@@ -1,4 +1,7 @@
-use crate::prisma::{self, PrismaClient};
+use crate::{
+    prisma::{self, PrismaClient},
+    ws::Event,
+};
 use axum::{
     async_trait,
     extract::{FromRequest, RequestParts},
@@ -16,7 +19,7 @@ pub async fn create_context() -> Context {
 
     let prisma = prisma::new_client().await.unwrap();
 
-    let (events, _) = broadcast::channel::<String>(100);
+    let (events, _) = broadcast::channel(100);
 
     Context(Arc::new(InnerContext {
         prisma,
@@ -28,7 +31,7 @@ pub async fn create_context() -> Context {
 #[derive(Debug)]
 pub struct InnerContext {
     pub prisma: PrismaClient,
-    pub events: Sender<String>,
+    pub events: Sender<Event>,
     pub config: Config,
 }
 

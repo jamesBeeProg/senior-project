@@ -1,4 +1,4 @@
-use crate::{context::Context, prisma, users::auth::Auth};
+use crate::{context::Context, prisma, ws::Event};
 use axum::{
     routing::{get, post},
     Json, Router,
@@ -17,7 +17,7 @@ async fn get_messages(context: Context) -> Json<Vec<MessageResponse>> {
         .prisma
         .message()
         .find_many(vec![])
-        .order_by(prisma::message::id::order(Direction::Asc))
+        .order_by(prisma::message::id::order(Direction::Desc))
         .take(20)
         .exec()
         .await
@@ -32,24 +32,30 @@ async fn send_message(
     context: Context,
     Json(body): Json<SendMessageBody>,
 ) -> Json<MessageResponse> {
-    let message = context
+    let message: MessageResponse = context
         .prisma
         .message()
         .create(body.content, vec![])
         .exec()
         .await
+        .unwrap()
+        .into();
+
+    context
+        .events
+        .send(Event::MessageCreated(message.clone()))
         .unwrap();
 
-    Json(message.into())
+    Json(message)
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 struct SendMessageBody {
     content: String,
 }
 
-#[derive(Serialize)]
-struct MessageResponse {
+#[derive(Debug, Clone, Serialize)]
+pub struct MessageResponse {
     id: String,
     content: String,
 }
