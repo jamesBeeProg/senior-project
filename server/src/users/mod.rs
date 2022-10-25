@@ -65,6 +65,7 @@ async fn create(_: Auth, context: Context, Json(user): Json<CreateBody>) -> Json
 pub struct UserResponse {
     id: String,
     name: String,
+    color: Option<String>,
 }
 
 impl From<prisma::user::Data> for UserResponse {
@@ -72,6 +73,7 @@ impl From<prisma::user::Data> for UserResponse {
         UserResponse {
             id: user.id,
             name: user.name,
+            color: user.color,
         }
     }
 }

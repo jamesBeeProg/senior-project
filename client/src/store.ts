@@ -65,5 +65,6 @@ export interface Message {
     author?: {
         id: string;
         name: string;
+        color?: string;
     };
 }

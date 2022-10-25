@@ -1,6 +1,7 @@
 import { FC, Fragment, useEffect, useState } from 'react';
 import {
     Avatar,
+    Divider,
     List,
     ListItem,
     ListItemAvatar,
@@ -37,13 +38,20 @@ export const Messages: FC = () => {
             <List>
                 {messages.map(({ content, id, author }) => (
                     <Fragment key={id}>
+                        <Divider />
                         <ListItem>
                             <ListItemAvatar>
-                                <Avatar>U</Avatar>
+                                <Avatar
+                                    sx={{
+                                        bgcolor: '#' + author?.color,
+                                    }}
+                                >
+                                    {author?.name?.[0] ?? 'S'}
+                                </Avatar>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={author?.name ?? 'Server'}
-                                secondary={author?.id ?? 'server'}
+                                secondary={author?.id ?? '---------'}
                             />
                         </ListItem>
                         <ListItem key={id}>

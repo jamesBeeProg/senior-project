@@ -1,10 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import {
     Avatar,
     List,
     ListItemAvatar,
     ListItemButton,
     ListItemText,
+    Divider,
 } from '@mui/material';
 
 export const Threads: FC = () => {
@@ -13,19 +14,21 @@ export const Threads: FC = () => {
     return (
         <List>
             {Array.from({ length: 10 }).map((_, key) => (
-                <ListItemButton
-                    key={key}
-                    selected={selected === key}
-                    onClick={() => setSelected(key)}
-                >
-                    <ListItemAvatar>
-                        <Avatar>#</Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={`Thread ${key}`}
-                        secondary="c1234567890"
-                    />
-                </ListItemButton>
+                <Fragment key={key}>
+                    <Divider />
+                    <ListItemButton
+                        selected={selected === key}
+                        onClick={() => setSelected(key)}
+                    >
+                        <ListItemAvatar>
+                            <Avatar>#</Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={`Thread ${key}`}
+                            secondary="c1234567890"
+                        />
+                    </ListItemButton>
+                </Fragment>
             ))}
         </List>
     );
