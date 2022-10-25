@@ -7,6 +7,18 @@ export const useStore = create<Store>((set, get) => ({
         set({ token });
     },
 
+    threads: [],
+    getThreads: async () => {
+        const threads = (await get().getRest('/threads')) as Thread[];
+        set({ threads });
+    },
+    createThread: async (name) => {
+        await get().postRest('/threads', { name });
+    },
+    threadCreated: async (thread) => {
+        set(({ threads }) => ({ threads: [thread, ...threads] }));
+    },
+
     messages: [],
     readMessages: async () => {
         const messages = (await get().getRest('/messages')) as Message[];
@@ -15,7 +27,7 @@ export const useStore = create<Store>((set, get) => ({
     sendMessage: async (content) => {
         await get().postRest('/messages', { content });
     },
-    messageCreated: async (message) => {
+    messageCreated: (message) => {
         set(({ messages }) => ({ messages: [message, ...messages] }));
     },
 
@@ -44,19 +56,34 @@ export const useStore = create<Store>((set, get) => ({
         }
         return await response.json();
     },
+    handleEvent: (raw: unknown) => {
+        const { e: event, c: payload } = raw as Event;
+
+        if (event === 'message_created') {
+            get().messageCreated(payload);
+        } else if (event === 'thread_created') {
+            get().threadCreated(payload);
+        }
+    },
 }));
 
 export interface Store {
     token: string | null;
     setToken(token: string): void;
 
+    threads: Thread[];
+    getThreads(): Promise<void>;
+    createThread(name: string): Promise<void>;
+    threadCreated(thread: Thread): void;
+
     messages: Message[];
-    readMessages(): void;
+    readMessages(): Promise<void>;
     sendMessage(content: string): Promise<void>;
-    messageCreated(message: Message): Promise<void>;
+    messageCreated(message: Message): void;
 
     getRest(url: string): Promise<unknown>;
     postRest(url: string, body: unknown): Promise<unknown>;
+    handleEvent(raw: unknown): void;
 }
 
 export interface Message {
@@ -68,3 +95,17 @@ export interface Message {
         color?: string;
     };
 }
+
+interface Thread {
+    id: string;
+    name: string;
+}
+
+interface EventTypes {
+    message_created: Message;
+    thread_created: Thread;
+}
+
+type Event = {
+    [E in keyof EventTypes]: { e: E; c: EventTypes[E] };
+}[keyof EventTypes];

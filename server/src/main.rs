@@ -1,6 +1,7 @@
 mod context;
 mod messages;
 mod prisma;
+mod threads;
 mod users;
 mod util;
 mod ws;
@@ -19,6 +20,7 @@ fn base() -> Router {
         .route("/ws", get(ws::ws_handler))
         .nest("/users", users::routes())
         .nest("/messages", messages::routes())
+        .nest("/threads", threads::routes())
 }
 
 #[tokio::main]

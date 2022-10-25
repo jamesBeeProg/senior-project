@@ -1,4 +1,4 @@
-use crate::{context::Context, messages::MessageResponse};
+use crate::{context::Context, messages::MessageResponse, threads::ThreadResponse};
 use axum::{
     extract::ws::{Message, WebSocketUpgrade},
     response::IntoResponse,
@@ -42,4 +42,5 @@ pub async fn ws_handler(ws: WebSocketUpgrade, context: Context) -> impl IntoResp
 #[serde(rename_all = "snake_case")]
 pub enum Event {
     MessageCreated(MessageResponse),
+    ThreadCreated(ThreadResponse),
 }
