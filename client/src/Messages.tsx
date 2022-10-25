@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 import {
     Avatar,
     List,
@@ -36,13 +36,20 @@ export const Messages: FC = () => {
             />
             <List>
                 {messages.map(({ content, id }) => (
-                    <ListItem key={id}>
-                        <ListItemAvatar>
-                            <Avatar>U</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary="User" secondary="c1234567890" />
-                        <ListItemText primary={content} secondary={id} />
-                    </ListItem>
+                    <Fragment key={id}>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>U</Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary="User"
+                                secondary="c1234567890"
+                            />
+                        </ListItem>
+                        <ListItem key={id}>
+                            <ListItemText primary={content} secondary={id} />
+                        </ListItem>
+                    </Fragment>
                 ))}
             </List>
         </>
