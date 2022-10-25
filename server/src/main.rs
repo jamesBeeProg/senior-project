@@ -19,7 +19,7 @@ fn base() -> Router {
     Router::new()
         .route("/ws", get(ws::ws_handler))
         .nest("/users", users::routes())
-        .nest("/messages", messages::routes())
+        .nest("/threads/:id/messages", messages::routes())
         .nest("/threads", threads::routes())
 }
 

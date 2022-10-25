@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import {
     Avatar,
     Divider,
@@ -11,16 +11,17 @@ import {
 import { useStore } from './store';
 
 export const Messages: FC = () => {
-    const readMessages = useStore((store) => store.readMessages);
+    const selectedThread = useStore((store) => store.selectedThread);
+    const messages = useStore((store) => store.messages[selectedThread]);
 
-    useEffect(() => {
-        readMessages();
-    }, [readMessages]);
-
-    const messages = useStore((store) => store.messages);
     const sendMessage = useStore((store) => store.sendMessage);
 
     const [draft, setDraft] = useState('');
+
+    if (!messages) {
+        console.log(selectedThread);
+        return;
+    }
 
     return (
         <>

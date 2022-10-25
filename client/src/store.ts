@@ -10,7 +10,7 @@ export const useStore = create<Store>((set, get) => ({
     threads: [],
     getThreads: async () => {
         const threads = (await get().getRest('/threads')) as Thread[];
-        set({ threads });
+        set({ threads, selectedThread: threads[0].id });
     },
     createThread: async (name) => {
         await get().postRest('/threads', { name });
@@ -19,21 +19,47 @@ export const useStore = create<Store>((set, get) => ({
         set(({ threads }) => ({ threads: [thread, ...threads] }));
     },
 
-    selectedThread: null,
+    selectedThread: '',
     setSelectedThread: async (selectedThread) => {
         set({ selectedThread });
+        if (!get().messages[selectedThread]) {
+            get().readMessages();
+        }
     },
 
-    messages: [],
+    messages: {},
     readMessages: async () => {
-        const messages = (await get().getRest('/messages')) as Message[];
-        set({ messages });
+        const selectedThread = get().selectedThread;
+        const newMessages = (await get().getRest(
+            `/threads/${selectedThread}/messages`,
+        )) as Message[];
+
+        set(({ messages }) => ({
+            messages: {
+                ...messages,
+                [selectedThread]: [
+                    ...newMessages,
+                    ...(messages[selectedThread] ?? []),
+                ],
+            },
+        }));
     },
     sendMessage: async (content) => {
-        await get().postRest('/messages', { content });
+        const selectedThread = get().selectedThread;
+        await get().postRest(`/threads/${selectedThread}/messages`, {
+            content,
+        });
     },
     messageCreated: (message) => {
-        set(({ messages }) => ({ messages: [message, ...messages] }));
+        set(({ messages }) => ({
+            messages: {
+                ...messages,
+                [message.thread_id]: [
+                    message,
+                    ...(messages[message.thread_id] ?? []),
+                ],
+            },
+        }));
     },
 
     getRest: async (url) => {
@@ -81,10 +107,10 @@ export interface Store {
     createThread(name: string): Promise<void>;
     threadCreated(thread: Thread): void;
 
-    selectedThread: string | null;
+    selectedThread: string;
     setSelectedThread(selectedThread: string): Promise<void>;
 
-    messages: Message[];
+    messages: Record<string, Message[] | undefined>;
     readMessages(): Promise<void>;
     sendMessage(content: string): Promise<void>;
     messageCreated(message: Message): void;
@@ -97,6 +123,7 @@ export interface Store {
 export interface Message {
     id: string;
     content: string;
+    thread_id: string;
     author?: {
         id: string;
         name: string;

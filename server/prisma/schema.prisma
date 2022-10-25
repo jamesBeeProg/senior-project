@@ -25,6 +25,8 @@ model Thread {
     updatedAt DateTime @updatedAt
 
     name String
+
+    messages Message[]
 }
 
 model Message {
@@ -36,4 +38,6 @@ model Message {
 
     author   User?   @relation(fields: [authorId], references: [id])
     authorId String?
+    thread   Thread  @relation(fields: [threadId], references: [id])
+    threadId String
 }
