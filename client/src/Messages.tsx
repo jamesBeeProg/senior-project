@@ -35,15 +35,15 @@ export const Messages: FC = () => {
                 }}
             />
             <List>
-                {messages.map(({ content, id }) => (
+                {messages.map(({ content, id, author }) => (
                     <Fragment key={id}>
                         <ListItem>
                             <ListItemAvatar>
                                 <Avatar>U</Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                                primary="User"
-                                secondary="c1234567890"
+                                primary={author?.name ?? 'Server'}
+                                secondary={author?.id ?? 'server'}
                             />
                         </ListItem>
                         <ListItem key={id}>

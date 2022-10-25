@@ -46,6 +46,7 @@ async fn send_message(
             body.content,
             vec![prisma::message::author_id::set(Some(author.id))],
         )
+        .with(prisma::message::author::fetch())
         .exec()
         .await
         .unwrap()
