@@ -1924,9 +1924,11 @@ __metadata:
     eslint-plugin-react: "npm:latest"
     parcel: "npm:^2.7.0"
     process: "npm:^0.11.10"
+    push-dir: "npm:^0.4.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-use-websocket: "npm:^4.2.0"
+    shx: "npm:^0.3.4"
     typescript: "npm:^4.8.4"
     zustand: "npm:^4.1.1"
   languageName: unknown
@@ -2733,7 +2735,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^7.1.3, glob@npm:^7.1.4":
+"glob@npm:^7.0.0, glob@npm:^7.1.3, glob@npm:^7.1.4":
   version: 7.2.3
   resolution: "glob@npm:7.2.3"
   dependencies:
@@ -3026,6 +3028,13 @@ __metadata:
     has: "npm:^1.0.3"
     side-channel: "npm:^1.0.4"
   checksum: b08401f1c652927be5238b68ace42c65fda969289b5d38b212389a547762db2602f4f2984c4e83a7b10dd0ca26f3faa1ab609828f0a6f3bfed8aca5ad7a91941
+  languageName: node
+  linkType: hard
+
+"interpret@npm:^1.0.0":
+  version: 1.4.0
+  resolution: "interpret@npm:1.4.0"
+  checksum: fb5b8a704c431c65d708a18b7d60f36ee2a100c30c381dd5aa02fcd0d92ff90f82a11b00a71acd0586d84e6654c7363a56fca85abb03a4e2bc2caefb44de64ef
   languageName: node
   linkType: hard
 
@@ -3511,6 +3520,13 @@ __metadata:
   dependencies:
     brace-expansion: "npm:^2.0.1"
   checksum: cf8124b47d19be2d6a4b2cab80114999239ab6a01062e2f0abe666b779de120b6f85ed9a73e3a27b61fa088fb45957929a8fcc727bd20de829d3e4e659ad01ff
+  languageName: node
+  linkType: hard
+
+"minimist@npm:^1.2.0, minimist@npm:^1.2.3":
+  version: 1.2.7
+  resolution: "minimist@npm:1.2.7"
+  checksum: 7bb50119bb59f48228a834e293a566c4b0e1b6c4648db83fb88830b4f932bfeaca72158bcdcc8a74130b339167eda92ec4cabb65faf07ab8d32542889a451676
   languageName: node
   linkType: hard
 
@@ -4090,6 +4106,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"push-dir@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "push-dir@npm:0.4.1"
+  dependencies:
+    minimist: "npm:^1.2.0"
+  bin:
+    push-dir: bin/push-dir.js
+  checksum: b577e9b41598c210a718439a0c9cd7c0eec8d497ea16cafb08363e023b09152f6ec04ac2c6d7cf1ab0304e2e8aadbe4662e175f816dc0fec2ac772d70fd796f7
+  languageName: node
+  linkType: hard
+
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -4182,6 +4209,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rechoir@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "rechoir@npm:0.6.2"
+  dependencies:
+    resolve: "npm:^1.1.6"
+  checksum: 9c739042ee71825d9e72879f89c165e425290bfc1feadb5437716604e33140fdac85970a2dcccbd2932dac6e20f4a277b80c2ecfc4b904a44c49e187fb67293e
+  languageName: node
+  linkType: hard
+
 "regenerator-runtime@npm:^0.13.4":
   version: 0.13.10
   resolution: "regenerator-runtime@npm:0.13.10"
@@ -4221,7 +4257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.19.0":
+"resolve@npm:^1.1.6, resolve@npm:^1.19.0":
   version: 1.22.1
   resolution: "resolve@npm:1.22.1"
   dependencies:
@@ -4247,7 +4283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@npm%3A^1.19.0#optional!builtin<compat/resolve>":
+"resolve@patch:resolve@npm%3A^1.1.6#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.19.0#optional!builtin<compat/resolve>":
   version: 1.22.1
   resolution: "resolve@patch:resolve@npm%3A1.22.1#optional!builtin<compat/resolve>::version=1.22.1&hash=07638b"
   dependencies:
@@ -4390,6 +4426,31 @@ __metadata:
   version: 3.0.0
   resolution: "shebang-regex@npm:3.0.0"
   checksum: 6be1588a86ed74d05481d09a6ef6a8db44550fda9785ae08c3df06717abc2e5e9a11804b1d0ac9b0641870c5ebf545e18c8d348bc105ba09227e6a32415ea1d6
+  languageName: node
+  linkType: hard
+
+"shelljs@npm:^0.8.5":
+  version: 0.8.5
+  resolution: "shelljs@npm:0.8.5"
+  dependencies:
+    glob: "npm:^7.0.0"
+    interpret: "npm:^1.0.0"
+    rechoir: "npm:^0.6.2"
+  bin:
+    shjs: bin/shjs
+  checksum: ecf61d3b6d544d405cd5fae2f6004b87744f617bc246ff4fd884c457886f9447299b87a3a20da7e8e4270e6bf7051f2eb872b97c6dfd98ec2b9607f8b717f615
+  languageName: node
+  linkType: hard
+
+"shx@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "shx@npm:0.3.4"
+  dependencies:
+    minimist: "npm:^1.2.3"
+    shelljs: "npm:^0.8.5"
+  bin:
+    shx: lib/cli.js
+  checksum: df5aef2d6555677b06d9c367eaa0147c33d423fca9c67f8464efb3a442a35f64be4f8ae4afed59bea167cf78fca18b3bb4ae7dabf171c7589daf8b3ecabbadf5
   languageName: node
   linkType: hard
 

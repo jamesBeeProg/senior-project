@@ -3,7 +3,9 @@
     "source": "src/index.html",
     "packageManager": "yarn@4.0.0-rc.22",
     "scripts": {
-        "dev": "parcel"
+        "dev": "parcel",
+        "build": "shx rm -rf dist/*; parcel build --public-url ./",
+        "publish": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
     },
     "dependencies": {
         "@emotion/react": "^11.10.4",
@@ -24,6 +26,8 @@
         "eslint-plugin-react": "latest",
         "parcel": "^2.7.0",
         "process": "^0.11.10",
+        "push-dir": "^0.4.1",
+        "shx": "^0.3.4",
         "typescript": "^4.8.4"
     }
 }
