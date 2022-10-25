@@ -1,4 +1,9 @@
-use crate::{context::Context, prisma, users::auth::Auth, ws::Event};
+use crate::{
+    context::Context,
+    prisma,
+    users::{auth::Auth, UserResponse},
+    ws::Event,
+};
 use axum::{
     routing::{get, post},
     Json, Router,
@@ -19,6 +24,7 @@ async fn get_messages(_: Auth, context: Context) -> Json<Vec<MessageResponse>> {
         .find_many(vec![])
         .order_by(prisma::message::id::order(Direction::Desc))
         .take(20)
+        .with(prisma::message::author::fetch())
         .exec()
         .await
         .unwrap();
@@ -29,13 +35,17 @@ async fn get_messages(_: Auth, context: Context) -> Json<Vec<MessageResponse>> {
 }
 
 async fn send_message(
+    Auth(author): Auth,
     context: Context,
     Json(body): Json<SendMessageBody>,
 ) -> Json<MessageResponse> {
     let message: MessageResponse = context
         .prisma
         .message()
-        .create(body.content, vec![])
+        .create(
+            body.content,
+            vec![prisma::message::author_id::set(Some(author.id))],
+        )
         .exec()
         .await
         .unwrap()
@@ -58,6 +68,7 @@ struct SendMessageBody {
 pub struct MessageResponse {
     id: String,
     content: String,
+    author: Option<UserResponse>,
 }
 
 impl From<prisma::message::Data> for MessageResponse {
@@ -65,6 +76,7 @@ impl From<prisma::message::Data> for MessageResponse {
         MessageResponse {
             id: message.id,
             content: message.content,
+            author: message.author.unwrap().map(|data| (*data).into()),
         }
     }
 }

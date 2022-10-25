@@ -24,7 +24,7 @@ async fn token(context: Context, Path(user_id): Path<String>) -> String {
 }
 
 async fn me(Auth(user): Auth) -> Json<UserResponse> {
-    user.into()
+    Json(user.into())
 }
 
 async fn id(
@@ -39,7 +39,7 @@ async fn id(
         .exec()
         .await
         .unwrap()
-        .map(|user| user.into())
+        .map(|user| Json(user.into()))
         .ok_or(StatusCode::NOT_FOUND)
 }
 
@@ -49,27 +49,29 @@ struct CreateBody {
 }
 
 async fn create(_: Auth, context: Context, Json(user): Json<CreateBody>) -> Json<UserResponse> {
-    context
-        .prisma
-        .user()
-        .create(user.name, vec![])
-        .exec()
-        .await
-        .unwrap()
-        .into()
+    Json(
+        context
+            .prisma
+            .user()
+            .create(user.name, vec![])
+            .exec()
+            .await
+            .unwrap()
+            .into(),
+    )
 }
 
-#[derive(Debug, Serialize)]
-struct UserResponse {
+#[derive(Debug, Clone, Serialize)]
+pub struct UserResponse {
     id: String,
     name: String,
 }
 
-impl From<prisma::user::Data> for Json<UserResponse> {
+impl From<prisma::user::Data> for UserResponse {
     fn from(user: prisma::user::Data) -> Self {
-        Json(UserResponse {
+        UserResponse {
             id: user.id,
             name: user.name,
-        })
+        }
     }
 }
