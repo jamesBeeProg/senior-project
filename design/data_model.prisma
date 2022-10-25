@@ -4,6 +4,7 @@ model User {
     updatedAt DateTime @updatedAt
 
     name     String
+    color    String?
     operator Boolean
 
     messages Message[]
@@ -38,9 +39,8 @@ model Thread {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    name     String
-    position Int
-    pinned   Boolean
+    name        String
+    pinPosition Int?   @unique
 
     messages Message[]
     permits  Permit[]

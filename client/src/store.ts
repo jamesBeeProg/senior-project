@@ -1,21 +1,29 @@
 import create from 'zustand';
 
-export const useStore = create<Store>((set) => ({
+export const useStore = create<Store>((set, get) => ({
     messages: [],
     readMessages: async () => {
-        const response = await fetch('http://localhost:3000/messages');
-        const messages = await response.json();
+        const messages = (await get().getRest('/messages')) as Message[];
         set({ messages });
     },
     sendMessage: async (content) => {
-        await fetch('http://localhost:3000/messages', {
-            method: 'post',
-            body: JSON.stringify({ content }),
-            headers: { 'Content-Type': 'application/json' },
-        });
+        await get().postRest('/messages', { content });
     },
     messageCreated: async (message) => {
         set(({ messages }) => ({ messages: [message, ...messages] }));
+    },
+
+    getRest: async (url) => {
+        const response = await fetch('http://localhost:3000' + url);
+        return await response.json();
+    },
+    postRest: async (url, body) => {
+        const response = await fetch('http://localhost:3000' + url, {
+            method: 'post',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return await response.json();
     },
 }));
 
@@ -24,6 +32,9 @@ export interface Store {
     readMessages(): void;
     sendMessage(content: string): Promise<void>;
     messageCreated(message: Message): Promise<void>;
+
+    getRest(url: string): Promise<unknown>;
+    postRest(url: string, body: unknown): Promise<unknown>;
 }
 
 export interface Message {
