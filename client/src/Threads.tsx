@@ -20,7 +20,8 @@ export const Threads: FC = () => {
     const threads = useStore((store) => store.threads);
     const createThread = useStore((store) => store.createThread);
 
-    const [selected, setSelected] = useState(null as string | null);
+    const selected = useStore((store) => store.selectedThread);
+    const setSelected = useStore((store) => store.setSelectedThread);
     const [draft, setDraft] = useState('');
 
     return (

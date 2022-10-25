@@ -19,6 +19,11 @@ export const useStore = create<Store>((set, get) => ({
         set(({ threads }) => ({ threads: [thread, ...threads] }));
     },
 
+    selectedThread: null,
+    setSelectedThread: async (selectedThread) => {
+        set({ selectedThread });
+    },
+
     messages: [],
     readMessages: async () => {
         const messages = (await get().getRest('/messages')) as Message[];
@@ -75,6 +80,9 @@ export interface Store {
     getThreads(): Promise<void>;
     createThread(name: string): Promise<void>;
     threadCreated(thread: Thread): void;
+
+    selectedThread: string | null;
+    setSelectedThread(selectedThread: string): Promise<void>;
 
     messages: Message[];
     readMessages(): Promise<void>;
