@@ -3,8 +3,9 @@ import { FC, ReactNode, useEffect } from 'react';
 import { useStore } from './store';
 
 export const Socket: FC<{ children: ReactNode }> = ({ children }) => {
+    const baseUrl = useStore((store) => store.baseUrl);
     const { lastJsonMessage, readyState } = useWebSocket(
-        'ws://localhost:3000/ws',
+        'ws://' + baseUrl + '/ws',
     );
     const handleEvent = useStore((store) => store.handleEvent);
 

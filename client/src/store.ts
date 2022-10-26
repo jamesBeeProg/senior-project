@@ -7,6 +7,11 @@ export const useStore = create<Store>((set, get) => ({
         localStorage.setItem('token', token);
         set({ token });
     },
+    baseUrl: localStorage.getItem('baseUrl') ?? 'localhost:3000',
+    setBaseUrl: (baseUrl: string) => {
+        localStorage.setItem('baseUrl', baseUrl);
+        set({ baseUrl });
+    },
 
     threads: [],
     getThreads: async () => {
@@ -60,17 +65,25 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     rest: async (method, url, body) => {
-        const response = await fetch('http://localhost:3000' + url, {
+        const { baseUrl, token } = get();
+
+        if (!baseUrl || !token) {
+            throw new Error('Missing baseUrl or token');
+        }
+
+        const response = await fetch(new URL(url, 'http://' + baseUrl), {
             method,
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + get().token,
+                Authorization: 'Bearer ' + token,
             },
         });
+
         if (!response.ok) {
             throw Error(`${response.statusText} ${await response.text()}`);
         }
+
         return await response.json();
     },
     handleEvent: (raw: unknown) => {
@@ -87,6 +100,8 @@ export const useStore = create<Store>((set, get) => ({
 export interface Store {
     token: string | null;
     setToken(token: string): void;
+    baseUrl: string | null;
+    setBaseUrl(url: string): void;
 
     threads: Thread[];
     getThreads(): Promise<void>;
