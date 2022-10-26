@@ -1364,10 +1364,65 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:4.13.0":
+  version: 4.13.0
+  resolution: "@tanstack/query-core@npm:4.13.0"
+  checksum: d33510e68402d86e4dc1263e25c5f05e9bfe22fc9e87c76ed14898739bcaf00b81d68be83729516bc5426488e74a372142bf55cb65bd32e42494d82975bbd404
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^4.13.0":
+  version: 4.13.0
+  resolution: "@tanstack/react-query@npm:4.13.0"
+  dependencies:
+    "@tanstack/query-core": "npm:4.13.0"
+    use-sync-external-store: "npm:^1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 34d75c1b0c3848ec34400daacd4e757c206a6c3551730e0d755b680046f4645099c1530138da0a4659eb21f22e4082c0dc8ca84efbd75abca7bca9f9a995317d
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
   checksum: d9f7f2130a0a2e1ea50f3bc90b83a8b99c913bbb80d7a1706f7f4730292ef299d18443c3b57a42dfb17c6559c9085e13f751b1b6c969bcff7bee3eeaf9da4dec
+  languageName: node
+  linkType: hard
+
+"@trpc/client@npm:10.0.0-proxy-beta.26":
+  version: 10.0.0-proxy-beta.26
+  resolution: "@trpc/client@npm:10.0.0-proxy-beta.26"
+  peerDependencies:
+    "@trpc/server": 10.0.0-proxy-beta.26
+  checksum: 98fdc04b9f2f68bc5448764bec17977fe1c0cb1294bb79f79e7440d30ac2c1a815263ed5d1f11301ecf841c2ca7e732c76b1108df5d268a7803efbeea3d92879
+  languageName: node
+  linkType: hard
+
+"@trpc/react-query@npm:10.0.0-proxy-beta.26":
+  version: 10.0.0-proxy-beta.26
+  resolution: "@trpc/react-query@npm:10.0.0-proxy-beta.26"
+  peerDependencies:
+    "@tanstack/react-query": ^4.3.8
+    "@trpc/client": 10.0.0-proxy-beta.26
+    "@trpc/server": 10.0.0-proxy-beta.26
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: b7eca3a3950d3414b8b827f2a59947e5c6d847f9a77481fcb5c11e0554fc60e2b2250f63e9c33d0fd72fc8391433f86b3979cf5c27579cc1450323f95c9265a8
+  languageName: node
+  linkType: hard
+
+"@trpc/server@npm:10.0.0-proxy-beta.26":
+  version: 10.0.0-proxy-beta.26
+  resolution: "@trpc/server@npm:10.0.0-proxy-beta.26"
+  checksum: c56af7ad841d3037ed3d773ac428d470395d6568c677a3062275d22c8be01cb736bf21cdf611662203252852f71a238645b6f91924f160099ac43f93310b7eca
   languageName: node
   linkType: hard
 
@@ -1915,6 +1970,10 @@ __metadata:
     "@emotion/react": "npm:^11.10.4"
     "@emotion/styled": "npm:^11.10.4"
     "@mui/material": "npm:^5.10.11"
+    "@tanstack/react-query": "npm:^4.13.0"
+    "@trpc/client": "npm:10.0.0-proxy-beta.26"
+    "@trpc/react-query": "npm:10.0.0-proxy-beta.26"
+    "@trpc/server": "npm:10.0.0-proxy-beta.26"
     "@types/eslint": "npm:^8"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18.0.6"
@@ -1928,8 +1987,10 @@ __metadata:
     push-dir: "npm:^0.4.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-error-boundary: "npm:^3.1.4"
     react-use-websocket: "npm:^4.2.0"
     shx: "npm:^0.3.4"
+    splist-server: "file:../server"
     typescript: "npm:^4.8.4"
     zustand: "npm:^4.1.1"
   languageName: unknown
@@ -4144,6 +4205,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "react-error-boundary@npm:3.1.4"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 7dbf53e15f0fd208b23521b96743c70166ca3a16aad8bcad7632b1da80f19035dfe91813fa65ee7ff7b7c826a15071e08b8e9270dc96392262ea8b1ab0ceedfa
+  languageName: node
+  linkType: hard
+
 "react-error-overlay@npm:6.0.9":
   version: 6.0.9
   resolution: "react-error-overlay@npm:6.0.9"
@@ -4539,6 +4611,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"splist-server@file:../server::locator=client%40workspace%3A.":
+  version: 0.0.0
+  resolution: "splist-server@file:../server#../server::hash=598d56&locator=client%40workspace%3A."
+  dependencies:
+    "@trpc/server": "npm:10.0.0-proxy-beta.26"
+    ws: "npm:^8.10.0"
+  checksum: 448d844e1f643338162ba3c54382253b3e7b2036ecef2d70cff4b57abb59834fe7d13a550270b5ecd3f3f8d480fce958a02938e143cd8e1cbb0357e97d286c47
+  languageName: node
+  linkType: hard
+
 "ssri@npm:^9.0.0":
   version: 9.0.1
   resolution: "ssri@npm:9.0.1"
@@ -4857,7 +4939,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:1.2.0":
+"use-sync-external-store@npm:1.2.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:
@@ -4938,6 +5020,21 @@ __metadata:
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
   checksum: 37d243a577dfeee20586eae1e3208dfb4e4cea1211a2a4116a19b50d91e619ff3dbc5ec934e28ca9baaa11a65df826c8d65c5fd1bb81f0ce0dadb469d47061c2
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.10.0":
+  version: 8.10.0
+  resolution: "ws@npm:8.10.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 29af9b14bfc76fd7df9f480173f6e6f24b04a305b648cd79792bfc0245ea53208fc1195e2f0bf2034a25d60bae25b8125e1b839b954d979989df966f9bd65f8f
   languageName: node
   linkType: hard
 
