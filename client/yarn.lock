@@ -1922,6 +1922,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:latest"
     eslint: "npm:^8.24.0"
     eslint-plugin-react: "npm:latest"
+    immer: "npm:^9.0.16"
     parcel: "npm:^2.7.0"
     process: "npm:^0.11.10"
     push-dir: "npm:^0.4.1"
@@ -2969,6 +2970,13 @@ __metadata:
   version: 5.2.0
   resolution: "ignore@npm:5.2.0"
   checksum: 0086b6992b2e2c9ec23f009e5939022323f1b4ad291607507045cc67b0a3b5d9724fc425f5300b3ba6d10ef74311bdf71cd26040227c30a182cf1b2a5971226b
+  languageName: node
+  linkType: hard
+
+"immer@npm:^9.0.16":
+  version: 9.0.16
+  resolution: "immer@npm:9.0.16"
+  checksum: cba94dce2c4193ac32fc789749d7b009a7a5d922e2ffc447f1b62efa25d623836571393e920b09a9e2b352702e178a6c4e9cf9597754b43cb161f3927fbae704
   languageName: node
   linkType: hard
 

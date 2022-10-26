@@ -1,4 +1,5 @@
 import create from 'zustand';
+import produce from 'immer';
 
 export const useStore = create<Store>((set, get) => ({
     token: localStorage.getItem('token'),
@@ -16,7 +17,11 @@ export const useStore = create<Store>((set, get) => ({
         await get().postRest('/threads', { name });
     },
     threadCreated: async (thread) => {
-        set(({ threads }) => ({ threads: [thread, ...threads] }));
+        set(
+            produce((draft: Store) => {
+                draft.threads.unshift(thread);
+            }),
+        );
     },
 
     selectedThread: '',
@@ -34,15 +39,12 @@ export const useStore = create<Store>((set, get) => ({
             `/threads/${selectedThread}/messages`,
         )) as Message[];
 
-        set(({ messages }) => ({
-            messages: {
-                ...messages,
-                [selectedThread]: [
-                    ...newMessages,
-                    ...(messages[selectedThread] ?? []),
-                ],
-            },
-        }));
+        set(
+            produce((draft: Store) => {
+                const current = draft.messages[selectedThread] ?? [];
+                draft.messages[selectedThread] = newMessages.concat(current);
+            }),
+        );
     },
     sendMessage: async (content) => {
         const selectedThread = get().selectedThread;
@@ -51,15 +53,12 @@ export const useStore = create<Store>((set, get) => ({
         });
     },
     messageCreated: (message) => {
-        set(({ messages }) => ({
-            messages: {
-                ...messages,
-                [message.thread_id]: [
-                    message,
-                    ...(messages[message.thread_id] ?? []),
-                ],
-            },
-        }));
+        set(
+            produce((draft: Store) => {
+                draft.messages[message.thread_id] ??= [];
+                draft.messages[message.thread_id]!.unshift(message);
+            }),
+        );
     },
 
     getRest: async (url) => {
