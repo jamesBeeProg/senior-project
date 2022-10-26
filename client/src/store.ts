@@ -11,7 +11,7 @@ export const useStore = create<Store>((set, get) => ({
     threads: [],
     getThreads: async () => {
         const threads = (await get().rest('get', '/threads')) as Thread[];
-        set({ threads, selectedThread: threads[0].id });
+        set({ threads });
     },
     createThread: async (name) => {
         await get().rest('post', '/threads', { name });
@@ -24,25 +24,24 @@ export const useStore = create<Store>((set, get) => ({
         );
     },
 
-    selectedThread: '',
+    selectedThread: null,
     setSelectedThread: async (selectedThread) => {
         set({ selectedThread });
         if (!get().messages[selectedThread]) {
-            get().readMessages();
+            get().readMessages(selectedThread);
         }
     },
 
     messages: {},
-    readMessages: async () => {
-        const selectedThread = get().selectedThread;
+    readMessages: async (thread: string) => {
         const newMessages = (await get().rest(
             'get',
-            `/threads/${selectedThread}/messages`,
+            `/threads/${thread}/messages`,
         )) as Message[];
 
         set(
             produce((draft: Store) => {
-                draft.messages[selectedThread] = newMessages;
+                draft.messages[thread] = newMessages;
             }),
         );
     },
@@ -94,11 +93,11 @@ export interface Store {
     createThread(name: string): Promise<void>;
     threadCreated(thread: Thread): void;
 
-    selectedThread: string;
+    selectedThread: string | null;
     setSelectedThread(selectedThread: string): Promise<void>;
 
     messages: Record<string, Message[] | undefined>;
-    readMessages(): Promise<void>;
+    readMessages(thread: string): Promise<void>;
     sendMessage(content: string): Promise<void>;
     messageCreated(message: Message): void;
 

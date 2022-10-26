@@ -10,10 +10,12 @@ import {
 } from '@mui/material';
 import { useStore } from './store';
 
-export const Messages: FC = () => {
-    const selectedThread = useStore((store) => store.selectedThread);
-    const messages = useStore((store) => store.messages[selectedThread]);
+interface Props {
+    thread: string;
+}
 
+export const Messages: FC<Props> = ({ thread }) => {
+    const messages = useStore((store) => store.messages[thread]);
     const sendMessage = useStore((store) => store.sendMessage);
 
     const [draft, setDraft] = useState('');

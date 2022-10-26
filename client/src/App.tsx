@@ -9,6 +9,8 @@ export const App: FC = () => {
     const token = useStore((state) => state.token);
     const setToken = useStore((state) => state.setToken);
 
+    const selectedThread = useStore((state) => state.selectedThread);
+
     return (
         <Socket>
             <Grid container rowSpacing={1} columnSpacing={1}>
@@ -29,7 +31,7 @@ export const App: FC = () => {
                     <Divider orientation="vertical" />
                 </Grid>
                 <Grid item xs>
-                    <Messages />
+                    {selectedThread && <Messages thread={selectedThread} />}
                 </Grid>
             </Grid>
         </Socket>
