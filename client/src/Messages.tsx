@@ -19,8 +19,7 @@ export const Messages: FC = () => {
     const [draft, setDraft] = useState('');
 
     if (!messages) {
-        console.log(selectedThread);
-        return;
+        return <></>;
     }
 
     return (

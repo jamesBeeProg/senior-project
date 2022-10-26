@@ -41,8 +41,7 @@ export const useStore = create<Store>((set, get) => ({
 
         set(
             produce((draft: Store) => {
-                const current = draft.messages[selectedThread] ?? [];
-                draft.messages[selectedThread] = newMessages.concat(current);
+                draft.messages[selectedThread] = newMessages;
             }),
         );
     },
@@ -55,8 +54,7 @@ export const useStore = create<Store>((set, get) => ({
     messageCreated: (message) => {
         set(
             produce((draft: Store) => {
-                draft.messages[message.thread_id] ??= [];
-                draft.messages[message.thread_id]!.unshift(message);
+                draft.messages[message.thread_id]?.unshift(message);
             }),
         );
     },
