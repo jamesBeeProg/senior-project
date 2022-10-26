@@ -10,11 +10,11 @@ export const useStore = create<Store>((set, get) => ({
 
     threads: [],
     getThreads: async () => {
-        const threads = (await get().getRest('/threads')) as Thread[];
+        const threads = (await get().rest('get', '/threads')) as Thread[];
         set({ threads, selectedThread: threads[0].id });
     },
     createThread: async (name) => {
-        await get().postRest('/threads', { name });
+        await get().rest('post', '/threads', { name });
     },
     threadCreated: async (thread) => {
         set(
@@ -35,7 +35,8 @@ export const useStore = create<Store>((set, get) => ({
     messages: {},
     readMessages: async () => {
         const selectedThread = get().selectedThread;
-        const newMessages = (await get().getRest(
+        const newMessages = (await get().rest(
+            'get',
             `/threads/${selectedThread}/messages`,
         )) as Message[];
 
@@ -47,7 +48,7 @@ export const useStore = create<Store>((set, get) => ({
     },
     sendMessage: async (content) => {
         const selectedThread = get().selectedThread;
-        await get().postRest(`/threads/${selectedThread}/messages`, {
+        await get().rest('post', `/threads/${selectedThread}/messages`, {
             content,
         });
     },
@@ -59,20 +60,9 @@ export const useStore = create<Store>((set, get) => ({
         );
     },
 
-    getRest: async (url) => {
+    rest: async (method, url, body) => {
         const response = await fetch('http://localhost:3000' + url, {
-            headers: {
-                Authorization: 'Bearer ' + get().token,
-            },
-        });
-        if (!response.ok) {
-            throw Error(`${response.statusText} ${await response.text()}`);
-        }
-        return await response.json();
-    },
-    postRest: async (url, body) => {
-        const response = await fetch('http://localhost:3000' + url, {
-            method: 'post',
+            method,
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
@@ -112,8 +102,7 @@ export interface Store {
     sendMessage(content: string): Promise<void>;
     messageCreated(message: Message): void;
 
-    getRest(url: string): Promise<unknown>;
-    postRest(url: string, body: unknown): Promise<unknown>;
+    rest(method: 'get' | 'post', url: string, body?: unknown): Promise<unknown>;
     handleEvent(raw: unknown): void;
 }
 
