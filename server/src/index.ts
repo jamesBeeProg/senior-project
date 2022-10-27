@@ -1,8 +1,10 @@
 import { initTRPC } from '@trpc/server';
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import { Server } from 'ws';
+import { PrismaClient } from '../prisma/generated';
 
-const t = initTRPC.create();
+export const t = initTRPC.create();
+export const prisma = new PrismaClient();
 
 const router = t.router({
     hello: t.procedure.query(() => {
@@ -27,4 +29,5 @@ process.on('SIGTERM', () => {
     console.log('SIGTERM');
     handler.broadcastReconnectNotification();
     wss.close();
+    prisma.$disconnect();
 });

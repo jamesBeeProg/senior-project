@@ -10,5 +10,7 @@
 # !.yarn/cache
 .pnp.*
 
-.parcel-cache/
-dist/
+node_modules/
+prisma/generated/
+
+.data/
