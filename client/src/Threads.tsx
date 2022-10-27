@@ -1,29 +1,18 @@
-import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { trpc } from '.';
 import produce from 'immer';
-import {
-    Divider,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    TextField,
-} from '@mui/material';
-import TagIcon from '@mui/icons-material/Tag';
+import { IconButton, List, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { ThreadItem } from './Thread';
 
 interface Props {
     selected: string | undefined;
     setSelected: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export const Threads: FC<Props> = ({ selected, setSelected }) => {
+export const Threads: FC<Props> = (props) => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
     const { mutate: createThread } = trpc.threads.createThread.useMutation();
-    const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
 
     const utils = trpc.useContext();
     trpc.threads.threadCreated.useSubscription(undefined, {
@@ -81,31 +70,7 @@ export const Threads: FC<Props> = ({ selected, setSelected }) => {
             </IconButton>
             <List>
                 {threads?.map((thread) => (
-                    <Fragment key={thread.id}>
-                        <Divider />
-                        <ListItem>
-                            <ListItemButton
-                                selected={thread.id === selected}
-                                onClick={() => setSelected(thread.id)}
-                            >
-                                <ListItemIcon>
-                                    <TagIcon />
-                                </ListItemIcon>
-                                <ListItemText>{thread.name}</ListItemText>
-                            </ListItemButton>
-                            <IconButton
-                                edge="end"
-                                onClick={() => {
-                                    deleteThread(thread);
-                                    if (selected === thread.id) {
-                                        setSelected(undefined);
-                                    }
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </ListItem>
-                    </Fragment>
+                    <ThreadItem key={thread.id} thread={thread} {...props} />
                 ))}
             </List>
         </>
