@@ -21,7 +21,8 @@ interface MenuItemCopyIDProps extends MenuItemProps {
 
 export const MenuItemCopyID: FC<MenuItemCopyIDProps> = ({ id, close }) => (
     <MenuItem
-        onClick={async () => {
+        onClick={async (e) => {
+            e.stopPropagation();
             await navigator.clipboard.writeText(id);
             close();
         }}
@@ -42,7 +43,8 @@ export const MenuItemDelete: FC<MenuItemDeleteProps> = ({ onClick, close }) => {
 
     return (
         <MenuItem
-            onClick={async () => {
+            onClick={async (e) => {
+                e.stopPropagation();
                 setOpen(true);
             }}
         >
