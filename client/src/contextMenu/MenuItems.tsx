@@ -1,7 +1,15 @@
-import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PinIcon from '@mui/icons-material/Pin';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 interface MenuItemProps {
     close: () => void;
@@ -29,16 +37,35 @@ interface MenuItemDeleteProps extends MenuItemProps {
     onClick: () => void;
 }
 
-export const MenuItemDelete: FC<MenuItemDeleteProps> = ({ onClick, close }) => (
-    <MenuItem
-        onClick={async () => {
-            onClick();
-            close();
-        }}
-    >
-        <ListItemIcon>
-            <DeleteIcon />
-        </ListItemIcon>
-        <ListItemText>Delete</ListItemText>
-    </MenuItem>
-);
+export const MenuItemDelete: FC<MenuItemDeleteProps> = ({ onClick, close }) => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <MenuItem
+            onClick={async () => {
+                setOpen(true);
+            }}
+        >
+            <ListItemIcon>
+                <DeleteIcon />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+            <Dialog open={open}>
+                <DialogTitle>Delete thread?</DialogTitle>
+                <DialogActions>
+                    <Button onClick={close}>Cancel</Button>
+                    <Button
+                        onClick={() => {
+                            onClick();
+                            close();
+                        }}
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </MenuItem>
+    );
+};
