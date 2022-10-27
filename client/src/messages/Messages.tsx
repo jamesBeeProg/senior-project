@@ -1,15 +1,8 @@
-import {
-    Avatar,
-    Divider,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    TextField,
-} from '@mui/material';
-import produce from 'immer';
 import { FC, Fragment, useState } from 'react';
+import { Divider, List, TextField } from '@mui/material';
+import produce from 'immer';
 import { trpc } from '..';
+import { MessageItem } from './Message';
 
 interface Props {
     threadId: string;
@@ -54,15 +47,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
                 {messages?.map((message) => (
                     <Fragment key={message.id}>
                         <Divider />
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>U</Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Username"
-                                secondary={message.content}
-                            />
-                        </ListItem>
+                        <MessageItem message={message} />
                     </Fragment>
                 ))}
             </List>
