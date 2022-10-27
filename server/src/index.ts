@@ -3,13 +3,17 @@ import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import { Server } from 'ws';
 import { PrismaClient } from '../prisma/generated';
 
-export const t = initTRPC.create();
+export const trpc = initTRPC.create();
 export const prisma = new PrismaClient();
 
-const router = t.router({
-    hello: t.procedure.query(() => {
+import { threadRouter } from './threads';
+
+const router = trpc.router({
+    hello: trpc.procedure.query(() => {
         return 'Hello world!';
     }),
+
+    threads: threadRouter,
 });
 
 export type Router = typeof router;
