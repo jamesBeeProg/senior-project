@@ -9,26 +9,50 @@ import {
     ListItemText,
     TextField,
 } from '@mui/material';
-import Tag from '@mui/icons-material/Tag';
-import Add from '@mui/icons-material/Add';
+import TagIcon from '@mui/icons-material/Tag';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Threads: FC = () => {
-    const { data } = trpc.threads.getThreads.useQuery();
-    const { mutateAsync } = trpc.threads.createThread.useMutation();
+    const { data: threads } = trpc.threads.getThreads.useQuery();
+    const { mutateAsync: createThread } =
+        trpc.threads.createThread.useMutation();
+    const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
 
     const utils = trpc.useContext();
     trpc.threads.threadCreated.useSubscription(undefined, {
-        onData(thread) {
+        onData(createdThread) {
             utils.threads.getThreads.setData(
                 produce((threads) => {
-                    threads?.push(thread);
+                    // Add thread to cache
+                    threads?.push(createdThread);
+                }),
+            );
+        },
+    });
+
+    trpc.threads.threadDeleted.useSubscription(undefined, {
+        onData(createdThread) {
+            utils.threads.getThreads.setData(
+                produce((threads) => {
+                    // Find the index of the thread that was deleted
+                    const index = threads?.findIndex(
+                        (thread) => thread.id === createdThread.id,
+                    );
+
+                    if (!index) {
+                        return;
+                    }
+
+                    // Use index to remove thread from cache
+                    threads?.splice(index, 1);
                 }),
             );
         },
     });
 
     const [name, setName] = useState('');
-    const [selected, setSelected] = useState();
+    const [selected, setSelected] = useState<string>();
 
     return (
         <>
@@ -44,23 +68,29 @@ export const Threads: FC = () => {
                         return;
                     }
 
-                    await mutateAsync({ name });
+                    await createThread({ name });
                     setName('');
                 }}
             >
-                <Add />
+                <AddIcon />
             </IconButton>
             <List>
-                {data?.map((thread) => (
+                {threads?.map((thread) => (
                     <ListItemButton
                         key={thread.id}
                         selected={thread.id === selected}
                         onClick={() => setSelected(thread.id)}
                     >
                         <ListItemIcon>
-                            <Tag />
+                            <TagIcon />
                         </ListItemIcon>
                         <ListItemText>{thread.name}</ListItemText>
+                        <IconButton
+                            edge="end"
+                            onClick={() => deleteThread(thread)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
                     </ListItemButton>
                 ))}
             </List>

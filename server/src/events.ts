@@ -4,6 +4,7 @@ import { Thread } from '../prisma/generated';
 
 interface Events {
     threadCreated: Thread;
+    threadDeleted: Thread;
 }
 
 const eventEmitter = new EventEmitter();

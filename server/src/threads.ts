@@ -20,4 +20,18 @@ export const threadRouter = trpc.router({
             observer.next(data);
         });
     }),
+
+    deleteThread: trpc.procedure
+        .input(z.object({ id: z.string().cuid() }))
+        .mutation(async ({ input }) => {
+            const thread = await prisma.thread.delete({ where: input });
+            emitEvent('threadDeleted', thread);
+            return thread;
+        }),
+
+    threadDeleted: trpc.procedure.subscription(() => {
+        return subscribe('threadDeleted', (data, observer) => {
+            observer.next(data);
+        });
+    }),
 });
