@@ -1,9 +1,9 @@
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
-import { trpc } from '.';
+import { trpc } from '..';
 import produce from 'immer';
 import { Divider, IconButton, List, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { ThreadItem } from './Thread';
+import { ThreadItem } from './ThreadItem';
 
 interface Props {
     selected: string | undefined;

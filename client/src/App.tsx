@@ -1,7 +1,7 @@
 import { CircularProgress, Divider, Grid } from '@mui/material';
 import { FC, Suspense, useState } from 'react';
-import { Messages } from './Messages';
-import { Threads } from './Threads';
+import { Messages } from './messages/Messages';
+import { Threads } from './threads/Threads';
 
 export const App: FC = () => {
     const [selected, setSelected] = useState<string>();

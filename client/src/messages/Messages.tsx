@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import produce from 'immer';
 import { FC, Fragment, useState } from 'react';
-import { trpc } from '.';
+import { trpc } from '..';
 
 interface Props {
     threadId: string;

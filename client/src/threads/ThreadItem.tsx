@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction } from 'react';
-import { trpc } from '.';
+import { trpc } from '..';
 import {
     ListItem,
     ListItemButton,
@@ -9,8 +9,8 @@ import {
 } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import type { Thread } from 'splist-server/prisma/generated';
-import { useContextMenu } from './contextMenu/useContextMenu';
-import { MenuItemCopyID, MenuItemDelete } from './contextMenu/MenuItems';
+import { useContextMenu } from '../contextMenu/useContextMenu';
+import { MenuItemCopyID, MenuItemDelete } from '../contextMenu/MenuItems';
 
 interface Props {
     selected: string | undefined;
