@@ -1,9 +1,21 @@
 import { FC, useState } from 'react';
 import { trpc } from '.';
+import produce from 'immer';
 
 export const Threads: FC = () => {
     const { data } = trpc.threads.getThreads.useQuery();
-    const { mutate } = trpc.threads.createThread.useMutation();
+    const { mutateAsync } = trpc.threads.createThread.useMutation();
+
+    const utils = trpc.useContext();
+    trpc.threads.threadCreated.useSubscription(undefined, {
+        onData(thread) {
+            utils.threads.getThreads.setData(
+                produce((threads) => {
+                    threads?.push(thread);
+                }),
+            );
+        },
+    });
 
     const [name, setName] = useState('');
 
@@ -15,12 +27,13 @@ export const Threads: FC = () => {
                 onChange={(e) => setName(e.target.value)}
             />
             <button
-                onClick={() => {
+                onClick={async () => {
                     if (!name) {
                         return;
                     }
 
-                    mutate({ name });
+                    await mutateAsync({ name });
+                    setName('');
                 }}
             >
                 Create
