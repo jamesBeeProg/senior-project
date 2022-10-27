@@ -1,11 +1,8 @@
 import { Observer, observable } from '@trpc/server/observable';
 import EventEmitter from 'events';
-import { Thread } from '../prisma/generated';
+import { ThreadEvents } from './threads';
 
-interface Events {
-    threadCreated: Thread;
-    threadDeleted: Thread;
-}
+interface Events extends ThreadEvents {}
 
 const eventEmitter = new EventEmitter();
 
@@ -16,12 +13,17 @@ export const emitEvent = <E extends keyof Events>(
     eventEmitter.emit(event, data);
 };
 
-export const subscribe = <E extends keyof Events>(
+export const subscribe = <E extends keyof Events, T>(
     event: E,
-    body: (data: Events[E], observer: Observer<Events[E], unknown>) => void,
+    body: (data: Events[E]) => T | undefined,
 ) => {
-    return observable<Events[E]>((observer) => {
-        const handler = (data: Events[E]) => body(data, observer);
+    return observable<T>((observer) => {
+        const handler = (data: Events[E]) => {
+            const output = body(data);
+            if (output) {
+                observer.next(output);
+            }
+        };
         eventEmitter.on(event, handler);
         return () => eventEmitter.off(event, handler);
     });

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { trpc } from '.';
 import produce from 'immer';
 import {
@@ -14,7 +14,12 @@ import TagIcon from '@mui/icons-material/Tag';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const Threads: FC = () => {
+interface Props {
+    selected: string | undefined;
+    setSelected: Dispatch<SetStateAction<string | undefined>>;
+}
+
+export const Threads: FC<Props> = ({ selected, setSelected }) => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
     const { mutate: createThread } = trpc.threads.createThread.useMutation();
     const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
@@ -52,7 +57,6 @@ export const Threads: FC = () => {
     });
 
     const [name, setName] = useState('');
-    const [selected, setSelected] = useState<string>();
 
     return (
         <>
@@ -76,10 +80,9 @@ export const Threads: FC = () => {
             </IconButton>
             <List>
                 {threads?.map((thread) => (
-                    <>
+                    <Fragment key={thread.id}>
                         <Divider />
                         <ListItemButton
-                            key={thread.id}
                             selected={thread.id === selected}
                             onClick={() => setSelected(thread.id)}
                         >
@@ -94,7 +97,7 @@ export const Threads: FC = () => {
                                 <DeleteIcon />
                             </IconButton>
                         </ListItemButton>
-                    </>
+                    </Fragment>
                 ))}
             </List>
         </>
