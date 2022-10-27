@@ -7,13 +7,11 @@ export const trpc = initTRPC.create();
 export const prisma = new PrismaClient();
 
 import { threadRouter } from './threads';
+import { messageRouter } from './messages';
 
 const router = trpc.router({
-    hello: trpc.procedure.query(() => {
-        return 'Hello world!';
-    }),
-
     threads: threadRouter,
+    messages: messageRouter,
 });
 
 export type Router = typeof router;

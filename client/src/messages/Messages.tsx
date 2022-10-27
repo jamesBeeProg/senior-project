@@ -9,15 +9,15 @@ interface Props {
 }
 
 export const Messages: FC<Props> = ({ threadId }) => {
-    const { data: messages } = trpc.threads.getMessages.useQuery({ threadId });
-    const { mutate: createMessage } = trpc.threads.createMessage.useMutation();
+    const { data: messages } = trpc.messages.getMessages.useQuery({ threadId });
+    const { mutate: createMessage } = trpc.messages.createMessage.useMutation();
 
     const context = trpc.useContext();
-    trpc.threads.messageCreated.useSubscription(
+    trpc.messages.messageCreated.useSubscription(
         { threadId },
         {
             onData(messageCreated) {
-                context.threads.getMessages.setData(
+                context.messages.getMessages.setData(
                     produce((messages) => {
                         messages?.unshift(messageCreated);
                     }),
@@ -33,6 +33,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
         <>
             <TextField
                 label="Send Message"
+                autoComplete="off"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={(e) => {

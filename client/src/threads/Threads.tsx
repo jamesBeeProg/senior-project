@@ -52,6 +52,7 @@ export const Threads: FC<Props> = (props) => {
         <>
             <TextField
                 label="Create Thread"
+                autoComplete="off"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
