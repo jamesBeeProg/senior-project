@@ -2,7 +2,7 @@ import { FC, Fragment, useState } from 'react';
 import { Divider, List, TextField } from '@mui/material';
 import produce from 'immer';
 import { trpc } from '..';
-import { MessageItem } from './Message';
+import { MessageItem } from './MessageItem';
 
 interface Props {
     threadId: string;

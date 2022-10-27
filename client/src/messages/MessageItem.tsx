@@ -24,6 +24,7 @@ export const MessageItem: FC<Props> = ({ message }) => {
                 <Avatar>U</Avatar>
             </ListItemAvatar>
             <ListItemText primary="Username" secondary={message.content} />
+
             <Menu {...contextMenuProps}>
                 <MenuItemCopyID close={closeContextMenu} id={message.id} />
             </Menu>

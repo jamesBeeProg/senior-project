@@ -1,7 +1,6 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import { trpc } from '..';
 import {
-    ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
@@ -24,16 +23,16 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
         useContextMenu();
 
     return (
-        <ListItem onContextMenu={onContextMenu}>
-            <ListItemButton
-                selected={thread.id === selected}
-                onClick={() => setSelected(thread.id)}
-            >
-                <ListItemIcon>
-                    <TagIcon />
-                </ListItemIcon>
-                <ListItemText>{thread.name}</ListItemText>
-            </ListItemButton>
+        <ListItemButton
+            onContextMenu={onContextMenu}
+            selected={thread.id === selected}
+            onClick={() => setSelected(thread.id)}
+        >
+            <ListItemIcon>
+                <TagIcon />
+            </ListItemIcon>
+            <ListItemText>{thread.name}</ListItemText>
+
             <Menu {...contextMenuProps}>
                 <MenuItemCopyID close={closeContextMenu} id={thread.id} />
                 <MenuItemDelete
@@ -46,6 +45,6 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
                     }}
                 />
             </Menu>
-        </ListItem>
+        </ListItemButton>
     );
 };
