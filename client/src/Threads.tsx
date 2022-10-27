@@ -1,7 +1,7 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { trpc } from '.';
 import produce from 'immer';
-import { IconButton, List, TextField } from '@mui/material';
+import { Divider, IconButton, List, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { ThreadItem } from './Thread';
 
@@ -70,7 +70,10 @@ export const Threads: FC<Props> = (props) => {
             </IconButton>
             <List>
                 {threads?.map((thread) => (
-                    <ThreadItem key={thread.id} thread={thread} {...props} />
+                    <Fragment key={thread.id}>
+                        <Divider />
+                        <ThreadItem thread={thread} {...props} />
+                    </Fragment>
                 ))}
             </List>
         </>

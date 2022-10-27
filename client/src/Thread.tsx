@@ -1,19 +1,16 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import { trpc } from '.';
 import {
-    Divider,
     ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
     Menu,
-    MenuItem,
 } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PinIcon from '@mui/icons-material/Pin';
 import type { Thread } from 'splist-server/prisma/generated';
-import { useContextMenu } from './useContextMenu';
+import { useContextMenu } from './contextMenu/useContextMenu';
+import { MenuItemCopyID, MenuItemDelete } from './contextMenu/MenuItems';
 
 interface Props {
     selected: string | undefined;
@@ -27,45 +24,28 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
         useContextMenu();
 
     return (
-        <>
-            <Divider />
-            <ListItem onContextMenu={onContextMenu}>
-                <ListItemButton
-                    selected={thread.id === selected}
-                    onClick={() => setSelected(thread.id)}
-                >
-                    <ListItemIcon>
-                        <TagIcon />
-                    </ListItemIcon>
-                    <ListItemText>{thread.name}</ListItemText>
-                </ListItemButton>
-                <Menu {...contextMenuProps}>
-                    <MenuItem
-                        onClick={async () => {
-                            await navigator.clipboard.writeText(thread.id);
-                            closeContextMenu();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <PinIcon />
-                        </ListItemIcon>
-                        <ListItemText>Copy ID</ListItemText>
-                    </MenuItem>
-                    <MenuItem
-                        onClick={() => {
-                            deleteThread(thread);
-                            if (selected === thread.id) {
-                                setSelected(undefined);
-                            }
-                        }}
-                    >
-                        <ListItemIcon>
-                            <DeleteIcon />
-                        </ListItemIcon>
-                        <ListItemText>Delete</ListItemText>
-                    </MenuItem>
-                </Menu>
-            </ListItem>
-        </>
+        <ListItem onContextMenu={onContextMenu}>
+            <ListItemButton
+                selected={thread.id === selected}
+                onClick={() => setSelected(thread.id)}
+            >
+                <ListItemIcon>
+                    <TagIcon />
+                </ListItemIcon>
+                <ListItemText>{thread.name}</ListItemText>
+            </ListItemButton>
+            <Menu {...contextMenuProps}>
+                <MenuItemCopyID close={closeContextMenu} id={thread.id} />
+                <MenuItemDelete
+                    close={closeContextMenu}
+                    onClick={() => {
+                        deleteThread(thread);
+                        if (selected === thread.id) {
+                            setSelected(undefined);
+                        }
+                    }}
+                />
+            </Menu>
+        </ListItem>
     );
 };
