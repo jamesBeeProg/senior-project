@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { trpc } from '.';
 import produce from 'immer';
 import {
+    Divider,
     IconButton,
     List,
     ListItemButton,
@@ -15,8 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Threads: FC = () => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
-    const { mutateAsync: createThread } =
-        trpc.threads.createThread.useMutation();
+    const { mutate: createThread } = trpc.threads.createThread.useMutation();
     const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
 
     const utils = trpc.useContext();
@@ -63,12 +63,12 @@ export const Threads: FC = () => {
             />
             <IconButton
                 size="large"
-                onClick={async () => {
+                onClick={() => {
                     if (!name) {
                         return;
                     }
 
-                    await createThread({ name });
+                    createThread({ name });
                     setName('');
                 }}
             >
@@ -76,22 +76,25 @@ export const Threads: FC = () => {
             </IconButton>
             <List>
                 {threads?.map((thread) => (
-                    <ListItemButton
-                        key={thread.id}
-                        selected={thread.id === selected}
-                        onClick={() => setSelected(thread.id)}
-                    >
-                        <ListItemIcon>
-                            <TagIcon />
-                        </ListItemIcon>
-                        <ListItemText>{thread.name}</ListItemText>
-                        <IconButton
-                            edge="end"
-                            onClick={() => deleteThread(thread)}
+                    <>
+                        <Divider />
+                        <ListItemButton
+                            key={thread.id}
+                            selected={thread.id === selected}
+                            onClick={() => setSelected(thread.id)}
                         >
-                            <DeleteIcon />
-                        </IconButton>
-                    </ListItemButton>
+                            <ListItemIcon>
+                                <TagIcon />
+                            </ListItemIcon>
+                            <ListItemText>{thread.name}</ListItemText>
+                            <IconButton
+                                edge="end"
+                                onClick={() => deleteThread(thread)}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </ListItemButton>
+                    </>
                 ))}
             </List>
         </>
