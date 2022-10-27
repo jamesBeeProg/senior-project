@@ -1,6 +1,16 @@
 import { FC, useState } from 'react';
 import { trpc } from '.';
 import produce from 'immer';
+import {
+    IconButton,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    TextField,
+} from '@mui/material';
+import Tag from '@mui/icons-material/Tag';
+import Add from '@mui/icons-material/Add';
 
 export const Threads: FC = () => {
     const { data } = trpc.threads.getThreads.useQuery();
@@ -18,15 +28,17 @@ export const Threads: FC = () => {
     });
 
     const [name, setName] = useState('');
+    const [selected, setSelected] = useState();
 
     return (
-        <div>
-            <input
-                placeholder="Thread name"
+        <>
+            <TextField
+                label="Create Thread"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
-            <button
+            <IconButton
+                size="large"
                 onClick={async () => {
                     if (!name) {
                         return;
@@ -36,13 +48,22 @@ export const Threads: FC = () => {
                     setName('');
                 }}
             >
-                Create
-            </button>
-            <ul>
+                <Add />
+            </IconButton>
+            <List>
                 {data?.map((thread) => (
-                    <li key={thread.id}>{thread.name}</li>
+                    <ListItemButton
+                        key={thread.id}
+                        selected={thread.id === selected}
+                        onClick={() => setSelected(thread.id)}
+                    >
+                        <ListItemIcon>
+                            <Tag />
+                        </ListItemIcon>
+                        <ListItemText>{thread.name}</ListItemText>
+                    </ListItemButton>
                 ))}
-            </ul>
-        </div>
+            </List>
+        </>
     );
 };
