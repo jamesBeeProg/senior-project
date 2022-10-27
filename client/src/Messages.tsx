@@ -24,7 +24,6 @@ export const Messages: FC<Props> = ({ threadId }) => {
         { threadId },
         {
             onData(messageCreated) {
-                console.log(messageCreated);
                 context.threads.getMessages.setData(
                     produce((messages) => {
                         messages?.unshift(messageCreated);

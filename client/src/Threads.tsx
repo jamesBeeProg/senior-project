@@ -5,6 +5,7 @@ import {
     Divider,
     IconButton,
     List,
+    ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
@@ -82,21 +83,28 @@ export const Threads: FC<Props> = ({ selected, setSelected }) => {
                 {threads?.map((thread) => (
                     <Fragment key={thread.id}>
                         <Divider />
-                        <ListItemButton
-                            selected={thread.id === selected}
-                            onClick={() => setSelected(thread.id)}
-                        >
-                            <ListItemIcon>
-                                <TagIcon />
-                            </ListItemIcon>
-                            <ListItemText>{thread.name}</ListItemText>
+                        <ListItem>
+                            <ListItemButton
+                                selected={thread.id === selected}
+                                onClick={() => setSelected(thread.id)}
+                            >
+                                <ListItemIcon>
+                                    <TagIcon />
+                                </ListItemIcon>
+                                <ListItemText>{thread.name}</ListItemText>
+                            </ListItemButton>
                             <IconButton
                                 edge="end"
-                                onClick={() => deleteThread(thread)}
+                                onClick={() => {
+                                    deleteThread(thread);
+                                    if (selected === thread.id) {
+                                        setSelected(undefined);
+                                    }
+                                }}
                             >
                                 <DeleteIcon />
                             </IconButton>
-                        </ListItemButton>
+                        </ListItem>
                     </Fragment>
                 ))}
             </List>

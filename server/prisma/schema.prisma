@@ -41,6 +41,6 @@ model Message {
 
     author   User?   @relation(fields: [authorId], references: [id])
     authorId String?
-    thread   Thread  @relation(fields: [threadId], references: [id])
+    thread   Thread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
     threadId String
 }
