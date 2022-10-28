@@ -1,5 +1,6 @@
 import {
     Avatar,
+    Button,
     CircularProgress,
     Divider,
     Grid,
@@ -12,7 +13,7 @@ import { Threads } from './threads/Threads';
 
 export const App: FC = () => {
     const [selected, setSelected] = useState<string>();
-    const { mutate, data, error } = trpc.users.login.useMutation({
+    const { mutate, data, error, reset } = trpc.users.login.useMutation({
         useErrorBoundary: false,
     });
     const [userId, setUserId] = useState(localStorage.getItem('userId') ?? '');
@@ -23,35 +24,32 @@ export const App: FC = () => {
         }
     }, []);
 
-    const loginField = (
-        <TextField
-            value={userId}
-            onChange={(e) => {
-                setUserId(e.target.value);
-                localStorage.setItem('userId', e.target.value);
-            }}
-            onKeyDown={(e) => {
-                if (e.key !== 'Enter' || !userId) {
-                    return;
-                }
+    if (error || !data) {
+        return (
+            <TextField
+                label="User ID"
+                value={userId}
+                error={!!error}
+                helperText={error && 'Unable to login'}
+                onChange={(e) => {
+                    setUserId(e.target.value);
+                    localStorage.setItem('userId', e.target.value);
+                }}
+                onKeyDown={(e) => {
+                    if (e.key !== 'Enter' || !userId) {
+                        return;
+                    }
 
-                mutate({ id: userId });
-            }}
-        />
-    );
-
-    if (error) {
-        return <>{loginField} Unable to login</>;
-    }
-
-    if (!data) {
-        return loginField;
+                    mutate({ id: userId });
+                }}
+            />
+        );
     }
 
     return (
         <Grid container>
             <Grid item xs>
-                {loginField}
+                <Button onClick={reset}>Logout</Button>
                 <Avatar>{data.name[0]}</Avatar> {data.name}
                 <Divider />
                 <Suspense fallback={<CircularProgress />}>
