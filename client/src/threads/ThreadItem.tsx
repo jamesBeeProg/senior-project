@@ -36,6 +36,8 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
             <Menu {...contextMenuProps}>
                 <MenuItemCopyID close={closeContextMenu} id={thread.id} />
                 <MenuItemDelete
+                    label="thread"
+                    name={'#' + thread.name}
                     close={closeContextMenu}
                     onClick={() => {
                         deleteThread(thread);

@@ -2,6 +2,8 @@ import {
     Button,
     Dialog,
     DialogActions,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
     ListItemIcon,
     ListItemText,
@@ -35,10 +37,17 @@ export const MenuItemCopyID: FC<MenuItemCopyIDProps> = ({ id, close }) => (
 );
 
 interface MenuItemDeleteProps extends MenuItemProps {
+    label: string;
+    name: string;
     onClick: () => void;
 }
 
-export const MenuItemDelete: FC<MenuItemDeleteProps> = ({ onClick, close }) => {
+export const MenuItemDelete: FC<MenuItemDeleteProps> = ({
+    label,
+    name,
+    onClick,
+    close,
+}) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -53,7 +62,13 @@ export const MenuItemDelete: FC<MenuItemDeleteProps> = ({ onClick, close }) => {
             </ListItemIcon>
             <ListItemText>Delete</ListItemText>
             <Dialog open={open}>
-                <DialogTitle>Delete thread?</DialogTitle>
+                <DialogTitle>Delete {label}?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete <strong>{name}</strong>?
+                        This cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={close}>Cancel</Button>
                     <Button
@@ -63,6 +78,7 @@ export const MenuItemDelete: FC<MenuItemDeleteProps> = ({ onClick, close }) => {
                         }}
                         startIcon={<DeleteIcon />}
                         color="error"
+                        variant="contained"
                     >
                         Delete
                     </Button>
