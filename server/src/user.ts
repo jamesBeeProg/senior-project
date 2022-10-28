@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { authProcedure, prisma, trpc } from '.';
+import { prisma, trpc } from '.';
 
 export const userRouter = trpc.router({
     login: trpc.procedure

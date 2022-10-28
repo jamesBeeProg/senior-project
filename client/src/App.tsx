@@ -13,10 +13,16 @@ import { FC, Suspense, useEffect, useState } from 'react';
 import { trpc } from '.';
 import { Messages } from './messages/Messages';
 import { Threads } from './threads/Threads';
+import { UserAvatar } from './users/UserAvatar';
 
 export const App: FC = () => {
     const [selected, setSelected] = useState<string>();
-    const { mutate, data, error, reset } = trpc.users.login.useMutation({
+    const {
+        mutate,
+        data: user,
+        error,
+        reset,
+    } = trpc.users.login.useMutation({
         useErrorBoundary: false,
     });
     const [userId, setUserId] = useState(localStorage.getItem('userId') ?? '');
@@ -27,7 +33,7 @@ export const App: FC = () => {
         }
     }, []);
 
-    if (error || !data) {
+    if (error || !user) {
         return (
             <Grid
                 container
@@ -65,9 +71,9 @@ export const App: FC = () => {
                     secondaryAction={<Button onClick={reset}>Logout</Button>}
                 >
                     <ListItemAvatar>
-                        <Avatar>{data.name[0]}</Avatar>
+                        <UserAvatar {...user} />
                     </ListItemAvatar>
-                    <ListItemText primary={data.name} />
+                    <ListItemText primary={user.name} />
                 </ListItem>
                 <Divider />
                 <Suspense fallback={<CircularProgress />}>

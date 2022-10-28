@@ -5165,7 +5165,7 @@ __metadata:
 
 "splist-server@file:../server::locator=client%40workspace%3A.":
   version: 0.0.0
-  resolution: "splist-server@file:../server#../server::hash=a01c46&locator=client%40workspace%3A."
+  resolution: "splist-server@file:../server#../server::hash=a50d1d&locator=client%40workspace%3A."
   dependencies:
     "@prisma/client": "npm:^4.5.0"
     "@trpc/server": "npm:10.0.0-proxy-beta.26"
@@ -5177,7 +5177,7 @@ __metadata:
       unplugged: true
     prisma@4.5.0:
       unplugged: true
-  checksum: 55d9aa4f2a6af86146cc157fd41ead04059a185ba3debe7fc23feea29f3e0b77f6396cb77cbfdf872a3ce7475aae935cb9d317c55f592ce1dce540c043bc839b
+  checksum: 4403ddad1df70cc3e8ba6feb48beff337bc14e807fd05aa845a29a04ccb418ad2fe1c97f9edfc49d57bf8312b458f0c08fa1e38c40c6e6806303a2a7aa30de64
   languageName: node
   linkType: hard
 
