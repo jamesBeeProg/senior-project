@@ -1,7 +1,13 @@
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { trpc } from '..';
 import produce from 'immer';
-import { Divider, IconButton, List, TextField } from '@mui/material';
+import {
+    Divider,
+    IconButton,
+    InputAdornment,
+    List,
+    TextField,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { ThreadItem } from './ThreadItem';
 
@@ -55,20 +61,27 @@ export const Threads: FC<Props> = (props) => {
                 autoComplete="off"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-            />
-            <IconButton
-                size="large"
-                onClick={() => {
-                    if (!name) {
-                        return;
-                    }
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                size="large"
+                                onClick={() => {
+                                    if (!name) {
+                                        return;
+                                    }
 
-                    createThread({ name });
-                    setName('');
+                                    createThread({ name });
+                                    setName('');
+                                }}
+                            >
+                                <AddIcon />
+                            </IconButton>
+                        </InputAdornment>
+                    ),
                 }}
-            >
-                <AddIcon />
-            </IconButton>
+            />
+
             <List>
                 {threads?.map((thread) => (
                     <Fragment key={thread.id}>
