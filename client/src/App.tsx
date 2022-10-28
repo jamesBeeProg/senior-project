@@ -4,6 +4,9 @@ import {
     CircularProgress,
     Divider,
     Grid,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
     TextField,
 } from '@mui/material';
 import { FC, Suspense, useEffect, useState } from 'react';
@@ -26,31 +29,46 @@ export const App: FC = () => {
 
     if (error || !data) {
         return (
-            <TextField
-                label="User ID"
-                value={userId}
-                error={!!error}
-                helperText={error && 'Unable to login'}
-                onChange={(e) => {
-                    setUserId(e.target.value);
-                    localStorage.setItem('userId', e.target.value);
-                }}
-                onKeyDown={(e) => {
-                    if (e.key !== 'Enter' || !userId) {
-                        return;
-                    }
+            <Grid
+                container
+                alignItems="center"
+                justifyContent="center"
+                style={{ minHeight: '100vh' }}
+            >
+                <Grid item>
+                    <TextField
+                        label="User ID"
+                        value={userId}
+                        error={!!error}
+                        helperText={error && 'Unable to login'}
+                        onChange={(e) => {
+                            setUserId(e.target.value);
+                            localStorage.setItem('userId', e.target.value);
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key !== 'Enter' || !userId) {
+                                return;
+                            }
 
-                    mutate({ id: userId });
-                }}
-            />
+                            mutate({ id: userId });
+                        }}
+                    />
+                </Grid>
+            </Grid>
         );
     }
 
     return (
         <Grid container>
             <Grid item xs>
-                <Button onClick={reset}>Logout</Button>
-                <Avatar>{data.name[0]}</Avatar> {data.name}
+                <ListItem
+                    secondaryAction={<Button onClick={reset}>Logout</Button>}
+                >
+                    <ListItemAvatar>
+                        <Avatar>{data.name[0]}</Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={data.name} />
+                </ListItem>
                 <Divider />
                 <Suspense fallback={<CircularProgress />}>
                     <Threads selected={selected} setSelected={setSelected} />
