@@ -35,6 +35,9 @@ export const Index: FC = () => {
                         suspense: true,
                         useErrorBoundary: true,
                     },
+                    mutations: {
+                        useErrorBoundary: true,
+                    },
                 },
             }),
     );
