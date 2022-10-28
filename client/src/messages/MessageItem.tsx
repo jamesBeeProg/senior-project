@@ -4,35 +4,45 @@ import { ListItem, ListItemAvatar, ListItemText, Menu } from '@mui/material';
 import { MenuItemCopyID } from '../contextMenu/MenuItems';
 import { useContextMenu } from '../contextMenu/useContextMenu';
 import { UserAvatar } from '../users/UserAvatar';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-
 interface Props {
     message: Message & { author: User | null };
 }
 
 export const MessageItem: FC<Props> = ({ message }) => {
-    const { onContextMenu, closeContextMenu, contextMenuProps } =
-        useContextMenu();
+    const messageContext = useContextMenu();
+    const authorContext = useContextMenu();
 
-    const author = message.author ?? { name: 'Server' };
+    const author = message.author ?? { name: 'Server', id: '' };
 
     return (
-        <ListItem onContextMenu={onContextMenu}>
+        <ListItem>
             <ListItemAvatar>
                 <UserAvatar {...author} />
             </ListItemAvatar>
             <ListItemText
-                primary={author.name}
+                primary={
+                    <span
+                        onContextMenu={authorContext.handle}
+                        style={{ display: 'block' }}
+                    >
+                        {author.name}
+                    </span>
+                }
                 secondary={
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <span
+                        onContextMenu={messageContext.handle}
+                        style={{ display: 'block' }}
+                    >
                         {message.content}
-                    </ReactMarkdown>
+                    </span>
                 }
             />
 
-            <Menu {...contextMenuProps}>
-                <MenuItemCopyID close={closeContextMenu} id={message.id} />
+            <Menu {...messageContext.menuProps}>
+                <MenuItemCopyID close={messageContext.close} id={message.id} />
+            </Menu>
+            <Menu {...authorContext.menuProps}>
+                <MenuItemCopyID close={authorContext.close} id={author.id} />
             </Menu>
         </ListItem>
     );

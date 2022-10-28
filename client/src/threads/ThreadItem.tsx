@@ -19,12 +19,11 @@ interface Props {
 
 export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
     const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
-    const { onContextMenu, closeContextMenu, contextMenuProps } =
-        useContextMenu();
+    const { handle, close, menuProps } = useContextMenu();
 
     return (
         <ListItemButton
-            onContextMenu={onContextMenu}
+            onContextMenu={handle}
             selected={thread.id === selected}
             onClick={() => setSelected(thread.id)}
         >
@@ -33,12 +32,12 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
             </ListItemIcon>
             <ListItemText>{thread.name}</ListItemText>
 
-            <Menu {...contextMenuProps}>
-                <MenuItemCopyID close={closeContextMenu} id={thread.id} />
+            <Menu {...menuProps}>
+                <MenuItemCopyID close={close} id={thread.id} />
                 <MenuItemDelete
                     label="thread"
                     name={'#' + thread.name}
-                    close={closeContextMenu}
+                    close={close}
                     onClick={() => {
                         deleteThread(thread);
                         if (selected === thread.id) {

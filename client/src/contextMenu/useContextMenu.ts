@@ -9,7 +9,7 @@ interface MousePos {
 export const useContextMenu = () => {
     const [mousePos, setMousePos] = useState<MousePos>();
 
-    const onContextMenu: MouseEventHandler = (event) => {
+    const handle: MouseEventHandler = (event) => {
         event.preventDefault();
         if (mousePos) {
             setMousePos(undefined);
@@ -21,18 +21,18 @@ export const useContextMenu = () => {
         }
     };
 
-    const closeContextMenu = () => setMousePos(undefined);
+    const close = () => setMousePos(undefined);
 
-    const contextMenuProps: MenuProps = {
+    const menuProps: MenuProps = {
         open: mousePos !== undefined,
-        onClose: closeContextMenu,
+        onClose: close,
         anchorReference: 'anchorPosition',
         anchorPosition: mousePos,
     };
 
     return {
-        onContextMenu,
-        closeContextMenu,
-        contextMenuProps,
+        handle,
+        close,
+        menuProps,
     };
 };
