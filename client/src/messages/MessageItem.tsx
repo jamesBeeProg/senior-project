@@ -31,7 +31,7 @@ export const MessageItem: FC<Props> = ({ message }) => {
                 secondary={
                     <span
                         onContextMenu={messageContext.handle}
-                        style={{ display: 'block' }}
+                        style={{ display: 'block', whiteSpace: 'pre-wrap' }}
                     >
                         {message.content}
                     </span>

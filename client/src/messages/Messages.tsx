@@ -41,12 +41,14 @@ export const Messages: FC<Props> = ({ threadId }) => {
             <TextField
                 label="Send Message"
                 autoComplete="off"
+                multiline
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={(e) => {
-                    if (e.key !== 'Enter') {
+                    if (e.key !== 'Enter' || e.getModifierState('Shift')) {
                         return;
                     }
+                    e.preventDefault();
                     createMessage({ content, threadId });
                     setContent('');
                 }}
