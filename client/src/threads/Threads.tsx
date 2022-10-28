@@ -41,7 +41,7 @@ export const Threads: FC<Props> = (props) => {
                         (thread) => thread.id === createdThread.id,
                     );
 
-                    if (!index) {
+                    if (index === undefined) {
                         return;
                     }
 
