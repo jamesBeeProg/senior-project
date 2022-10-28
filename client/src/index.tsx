@@ -6,8 +6,15 @@ import { createWSClient, wsLink } from '@trpc/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCReact } from '@trpc/react-query';
 import { Router } from 'splist-server';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
 export const trpc = createTRPCReact<Router>();
+
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 
 export const Index: FC = () => {
     const [trpcClient] = useState(() => {
@@ -33,11 +40,14 @@ export const Index: FC = () => {
     );
 
     return (
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-            <QueryClientProvider client={queryClient}>
-                <App />
-            </QueryClientProvider>
-        </trpc.Provider>
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <trpc.Provider client={trpcClient} queryClient={queryClient}>
+                <QueryClientProvider client={queryClient}>
+                    <App />
+                </QueryClientProvider>
+            </trpc.Provider>
+        </ThemeProvider>
     );
 };
 
