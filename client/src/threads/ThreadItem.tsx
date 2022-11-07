@@ -20,7 +20,7 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
         <div
             onContextMenu={handle}
             onClick={() => setSelected(thread.id)}
-            className="bg-slate-700 hover:bg-purple-400  rounded p-4 m-4"
+            className="bg-neutral-700 hover:bg-primary-400  rounded p-4 m-4"
         >
             <TagIcon /> {thread.name}
             <Menu {...menuProps}>

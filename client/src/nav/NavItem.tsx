@@ -22,8 +22,8 @@ export const NavItem: FC<Props> = ({ thread, selected, setSelected }) => {
             onContextMenu={handle}
             onClick={() => setSelected(thread.id)}
             className={
-                `block hover:bg-purple-400 rounded p-1 text-start` +
-                (selected === thread.id ? ' bg-purple-600' : ' bg-slate-700')
+                `block hover:bg-primary-400 rounded p-1 text-start` +
+                (selected === thread.id ? ' bg-primary-600' : ' bg-neutral-700')
             }
         >
             <TagIcon />
@@ -55,8 +55,8 @@ export const NavHomeItem: FC<Omit<Props, 'thread'>> = ({
         <button
             onClick={() => setSelected(undefined)}
             className={
-                `block hover:bg-purple-400 rounded p-1 text-start` +
-                (!selected ? ' bg-purple-600' : ' bg-slate-700')
+                `block hover:bg-primary-400 rounded p-1 text-start` +
+                (!selected ? ' bg-primary-600' : ' bg-neutral-700')
             }
         >
             <HomeIcon />

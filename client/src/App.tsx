@@ -56,13 +56,13 @@ export const App: FC = () => {
     }
 
     return (
-        <div className="grid grid-cols-6 h-screen w-screen overflow-hidden bg-slate-900 gap-2 text-white">
-            <div className="col-span-1 bg-slate-800 ">
+        <div className="grid grid-cols-6 h-screen w-screen overflow-hidden bg-neutral-900 gap-2 text-text">
+            <div className="col-span-1 bg-neutral-800 ">
                 <Suspense fallback={<CircularProgress />}>
                     <Nav selected={selected} setSelected={setSelected} />
                 </Suspense>
             </div>
-            <div className="col-span-4 bg-slate-800">
+            <div className="col-span-4 bg-neutral-800">
                 <Suspense fallback={<CircularProgress />}>
                     {selected ? (
                         <Messages threadId={selected} />
@@ -74,7 +74,7 @@ export const App: FC = () => {
                     )}
                 </Suspense>
             </div>
-            <div className="col-span-1 flex justify-center items-center gap-4 bg-slate-800">
+            <div className="col-span-1 flex justify-center items-center gap-4 bg-neutral-800">
                 <UserAvatar {...user} />
                 <span className="block hover:underline">{user.name}</span>
                 <button onClick={reset}>Logout</button>

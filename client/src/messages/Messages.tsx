@@ -43,7 +43,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
                 ))}
             </div>
             <textarea
-                className="bg-slate-700 h-fit resize-none"
+                className="bg-neutral-700 h-fit resize-none m-4 rounded"
                 placeholder="Send Message"
                 autoComplete="off"
                 value={content}
