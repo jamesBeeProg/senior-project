@@ -1,15 +1,9 @@
 import { FC, Fragment, useState } from 'react';
-import {
-    Divider,
-    IconButton,
-    InputAdornment,
-    List,
-    TextField,
-} from '@mui/material';
+import { TextField } from '@mui/material';
 import produce from 'immer';
 import { trpc } from '..';
 import { MessageItem } from './MessageItem';
-import SendIcon from '@mui/icons-material/Send';
+import { MessageAuthor } from './MessageAuthor';
 
 interface Props {
     threadId: string;
@@ -37,7 +31,18 @@ export const Messages: FC<Props> = ({ threadId }) => {
     const [content, setContent] = useState('');
 
     return (
-        <>
+        <div className="flex flex-col h-screen">
+            <div className="flex flex-grow flex-col-reverse overflow-auto mb-4">
+                {messages?.map((message, index, messages) => (
+                    <Fragment key={message.id}>
+                        <MessageItem message={message} />
+
+                        {messages[index + 1]?.authorId !== message.authorId && (
+                            <MessageAuthor author={message.author} />
+                        )}
+                    </Fragment>
+                ))}
+            </div>
             <TextField
                 label="Send Message"
                 autoComplete="off"
@@ -52,30 +57,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
                     createMessage({ content, threadId });
                     setContent('');
                 }}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                size="large"
-                                onClick={() => {
-                                    createMessage({ content, threadId });
-                                    setContent('');
-                                }}
-                            >
-                                <SendIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                }}
             />
-            <List>
-                {messages?.map((message) => (
-                    <Fragment key={message.id}>
-                        <Divider />
-                        <MessageItem message={message} />
-                    </Fragment>
-                ))}
-            </List>
-        </>
+        </div>
     );
 };

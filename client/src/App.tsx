@@ -64,7 +64,7 @@ export const App: FC = () => {
     }
 
     return (
-        <div className="grid grid-cols-6 h-screen w-screen">
+        <div className="grid grid-cols-6 h-screen w-screen overflow-hidden">
             <div className="col-span-1">
                 <Suspense fallback={<CircularProgress />}>
                     <Threads selected={selected} setSelected={setSelected} />

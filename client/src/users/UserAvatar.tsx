@@ -1,4 +1,3 @@
-import { Avatar } from '@mui/material';
 import { FC } from 'react';
 
 interface Props {
@@ -7,7 +6,13 @@ interface Props {
 }
 
 export const UserAvatar: FC<Props> = ({ name, color }: Props) => {
+    const backgroundColor = color ? '#' + color : '';
     return (
-        <Avatar sx={{ bgcolor: color ? '#' + color : '' }}>{name[0]}</Avatar>
+        <div
+            className="rounded-full w-10 h-10 grid place-items-center"
+            style={{ backgroundColor }}
+        >
+            {name[0]}
+        </div>
     );
 };
