@@ -24,7 +24,7 @@ export const messageRouter = trpc.router({
         .input(
             z.object({
                 threadId: z.string().cuid(),
-                content: z.string().trim().min(1).max(1000),
+                content: z.string().max(1000),
             }),
         )
         .mutation(async ({ input, ctx }) => {

@@ -27,7 +27,7 @@ export const Threads: FC<Props> = (props) => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onKeyDown={(e) => {
-                    if (e.key !== 'Enter') {
+                    if (e.key !== 'Enter' || name.trim().length < 1) {
                         return;
                     }
                     createThread({ name });
