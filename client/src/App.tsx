@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, TextField } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { FC, Suspense, useEffect, useState } from 'react';
 import { trpc } from '.';
 import { Messages } from './messages/Messages';
@@ -26,32 +26,24 @@ export const App: FC = () => {
 
     if (error || !user) {
         return (
-            <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                style={{ minHeight: '100vh' }}
-            >
-                <Grid item>
-                    <TextField
-                        label="User ID"
-                        value={userId}
-                        error={!!error}
-                        helperText={error && 'Unable to login'}
-                        onChange={(e) => {
-                            setUserId(e.target.value);
-                            localStorage.setItem('userId', e.target.value);
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key !== 'Enter' || !userId) {
-                                return;
-                            }
+            <div className="grid place-items-center h-screen overflow-hidden bg-neutral-900  text-text">
+                <input
+                    className="w-2/6 bg-neutral-700 rounded p-4"
+                    placeholder="User ID"
+                    value={userId}
+                    onChange={(e) => {
+                        setUserId(e.target.value);
+                        localStorage.setItem('userId', e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key !== 'Enter' || !userId) {
+                            return;
+                        }
 
-                            mutate({ id: userId });
-                        }}
-                    />
-                </Grid>
-            </Grid>
+                        mutate({ id: userId });
+                    }}
+                />
+            </div>
         );
     }
 
@@ -76,8 +68,10 @@ export const App: FC = () => {
             </div>
             <div className="col-span-1 flex justify-center items-center gap-4 bg-neutral-800">
                 <UserAvatar {...user} />
-                <span className="block hover:underline">{user.name}</span>
-                <button onClick={reset}>Logout</button>
+                <span className="block">{user.name}</span>
+                <button className="hover:underline" onClick={reset}>
+                    Logout
+                </button>
             </div>
         </div>
     );

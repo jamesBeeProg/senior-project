@@ -21,7 +21,7 @@ export const Threads: FC<Props> = (props) => {
                 ))}
             </div>
             <input
-                className="bg-neutral-700 m-4 rounded"
+                className="bg-neutral-700 m-4 rounded p-4"
                 placeholder="Create Thread"
                 autoComplete="off"
                 value={name}

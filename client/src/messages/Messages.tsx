@@ -31,7 +31,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
 
     return (
         <div className="flex flex-col h-screen">
-            <div className="flex flex-grow flex-col-reverse overflow-auto mb-4">
+            <div className="flex flex-grow flex-col-reverse overflow-auto mb-4 p-4">
                 {messages?.map((message, index, messages) => (
                     <Fragment key={message.id}>
                         <MessageItem message={message} />
@@ -43,7 +43,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
                 ))}
             </div>
             <textarea
-                className="bg-neutral-700 h-fit resize-none m-4 rounded"
+                className="bg-neutral-700 h-fit resize-none m-4 rounded p-4"
                 placeholder="Send Message"
                 autoComplete="off"
                 value={content}
