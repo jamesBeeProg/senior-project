@@ -64,8 +64,18 @@ export const App: FC = () => {
     }
 
     return (
-        <Grid container>
-            <Grid item xs>
+        <div className="grid grid-cols-6 h-screen w-screen">
+            <div className="col-span-1">
+                <Suspense fallback={<CircularProgress />}>
+                    <Threads selected={selected} setSelected={setSelected} />
+                </Suspense>
+            </div>
+            <div className="col-span-4">
+                <Suspense fallback={<CircularProgress />}>
+                    {selected && <Messages threadId={selected} />}
+                </Suspense>
+            </div>
+            <div className="col-span-1">
                 <ListItem
                     secondaryAction={<Button onClick={reset}>Logout</Button>}
                 >
@@ -74,19 +84,7 @@ export const App: FC = () => {
                     </ListItemAvatar>
                     <ListItemText primary={user.name} />
                 </ListItem>
-                <Divider />
-                <Suspense fallback={<CircularProgress />}>
-                    <Threads selected={selected} setSelected={setSelected} />
-                </Suspense>
-            </Grid>
-            <Grid item>
-                <Divider orientation="vertical" />
-            </Grid>
-            <Grid item xs>
-                <Suspense fallback={<CircularProgress />}>
-                    {selected && <Messages threadId={selected} />}
-                </Suspense>
-            </Grid>
-        </Grid>
+            </div>
+        </div>
     );
 };
