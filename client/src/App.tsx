@@ -11,6 +11,7 @@ import {
 import { FC, Suspense, useEffect, useState } from 'react';
 import { trpc } from '.';
 import { Messages } from './messages/Messages';
+import { Nav } from './nav/Nav';
 import { Threads } from './threads/Threads';
 import { UserAvatar } from './users/UserAvatar';
 
@@ -67,12 +68,19 @@ export const App: FC = () => {
         <div className="grid grid-cols-6 h-screen w-screen overflow-hidden">
             <div className="col-span-1">
                 <Suspense fallback={<CircularProgress />}>
-                    <Threads selected={selected} setSelected={setSelected} />
+                    <Nav selected={selected} setSelected={setSelected} />
                 </Suspense>
             </div>
             <div className="col-span-4">
                 <Suspense fallback={<CircularProgress />}>
-                    {selected && <Messages threadId={selected} />}
+                    {selected ? (
+                        <Messages threadId={selected} />
+                    ) : (
+                        <Threads
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
+                    )}
                 </Suspense>
             </div>
             <div className="col-span-1">
