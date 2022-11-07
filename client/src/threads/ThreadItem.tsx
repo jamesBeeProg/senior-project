@@ -1,11 +1,6 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import { trpc } from '..';
-import {
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-} from '@mui/material';
+import { Menu } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import type { Thread } from 'splist-server/prisma/generated';
 import { useContextMenu } from '../contextMenu/useContextMenu';
@@ -22,16 +17,12 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
     const { handle, close, menuProps } = useContextMenu();
 
     return (
-        <ListItemButton
+        <div
             onContextMenu={handle}
-            selected={thread.id === selected}
             onClick={() => setSelected(thread.id)}
+            className="bg-slate-700 hover:bg-slate-500  rounded p-4 m-4"
         >
-            <ListItemIcon>
-                <TagIcon />
-            </ListItemIcon>
-            <ListItemText>{thread.name}</ListItemText>
-
+            <TagIcon /> {thread.name}
             <Menu {...menuProps}>
                 <MenuItemCopyID close={close} id={thread.id} />
                 <MenuItemDelete
@@ -46,6 +37,6 @@ export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
                     }}
                 />
             </Menu>
-        </ListItemButton>
+        </div>
     );
 };

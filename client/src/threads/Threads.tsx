@@ -1,14 +1,6 @@
-import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { trpc } from '..';
-import produce from 'immer';
-import {
-    Divider,
-    IconButton,
-    InputAdornment,
-    List,
-    TextField,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { TextField } from '@mui/material';
 import { ThreadItem } from './ThreadItem';
 
 interface Props {
@@ -20,76 +12,28 @@ export const Threads: FC<Props> = (props) => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
     const { mutate: createThread } = trpc.threads.createThread.useMutation();
 
-    const utils = trpc.useContext();
-    trpc.threads.threadCreated.useSubscription(undefined, {
-        onData(createdThread) {
-            utils.threads.getThreads.setData(
-                produce((threads) => {
-                    // Add thread to cache
-                    threads?.push(createdThread);
-                }),
-            );
-        },
-    });
-
-    trpc.threads.threadDeleted.useSubscription(undefined, {
-        onData(createdThread) {
-            utils.threads.getThreads.setData(
-                produce((threads) => {
-                    // Find the index of the thread that was deleted
-                    const index = threads?.findIndex(
-                        (thread) => thread.id === createdThread.id,
-                    );
-
-                    if (index === undefined) {
-                        return;
-                    }
-
-                    // Use index to remove thread from cache
-                    threads?.splice(index, 1);
-                }),
-            );
-        },
-    });
-
     const [name, setName] = useState('');
 
     return (
-        <>
+        <div className="flex flex-col h-screen">
+            <div className="flex flex-grow flex-col overflow-auto mb-4">
+                {threads?.map((thread) => (
+                    <ThreadItem key={thread.id} thread={thread} {...props} />
+                ))}
+            </div>
             <TextField
                 label="Create Thread"
                 autoComplete="off"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                size="large"
-                                onClick={() => {
-                                    if (!name) {
-                                        return;
-                                    }
-
-                                    createThread({ name });
-                                    setName('');
-                                }}
-                            >
-                                <AddIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
+                onKeyDown={(e) => {
+                    if (e.key !== 'Enter') {
+                        return;
+                    }
+                    createThread({ name });
+                    setName('');
                 }}
             />
-
-            <List>
-                {threads?.map((thread) => (
-                    <Fragment key={thread.id}>
-                        <Divider />
-                        <ThreadItem thread={thread} {...props} />
-                    </Fragment>
-                ))}
-            </List>
-        </>
+        </div>
     );
 };

@@ -1,7 +1,6 @@
 import {
     Button,
     CircularProgress,
-    Divider,
     Grid,
     ListItem,
     ListItemAvatar,
