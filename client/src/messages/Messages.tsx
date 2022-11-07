@@ -1,5 +1,4 @@
 import { FC, Fragment, useState } from 'react';
-import { TextField } from '@mui/material';
 import produce from 'immer';
 import { trpc } from '..';
 import { MessageItem } from './MessageItem';
@@ -43,10 +42,10 @@ export const Messages: FC<Props> = ({ threadId }) => {
                     </Fragment>
                 ))}
             </div>
-            <TextField
-                label="Send Message"
+            <textarea
+                className="bg-slate-700 h-fit resize-none"
+                placeholder="Send Message"
                 autoComplete="off"
-                multiline
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={(e) => {

@@ -1,7 +1,6 @@
-import { Dispatch, FC, Fragment, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { trpc } from '..';
 import produce from 'immer';
-import { Divider, List } from '@mui/material';
 import { NavHomeItem, NavItem } from './NavItem';
 
 interface Props {
@@ -45,14 +44,11 @@ export const Nav: FC<Props> = (props) => {
     });
 
     return (
-        <List>
+        <div className="flex flex-col gap-4 p-4">
             <NavHomeItem {...props} />
             {threads?.map((thread) => (
-                <Fragment key={thread.id}>
-                    <Divider />
-                    <NavItem thread={thread} {...props} />
-                </Fragment>
+                <NavItem key={thread.id} thread={thread} {...props} />
             ))}
-        </List>
+        </div>
     );
 };

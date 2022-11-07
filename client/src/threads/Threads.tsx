@@ -1,6 +1,5 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { trpc } from '..';
-import { TextField } from '@mui/material';
 import { ThreadItem } from './ThreadItem';
 
 interface Props {
@@ -21,8 +20,9 @@ export const Threads: FC<Props> = (props) => {
                     <ThreadItem key={thread.id} thread={thread} {...props} />
                 ))}
             </div>
-            <TextField
-                label="Create Thread"
+            <input
+                className="bg-slate-700"
+                placeholder="Create Thread"
                 autoComplete="off"
                 value={name}
                 onChange={(e) => setName(e.target.value)}

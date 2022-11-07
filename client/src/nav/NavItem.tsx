@@ -1,11 +1,6 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import { trpc } from '..';
-import {
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-} from '@mui/material';
+import { Menu } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import HomeIcon from '@mui/icons-material/Home';
 import type { Thread } from 'splist-server/prisma/generated';
@@ -23,15 +18,16 @@ export const NavItem: FC<Props> = ({ thread, selected, setSelected }) => {
     const { handle, close, menuProps } = useContextMenu();
 
     return (
-        <ListItemButton
+        <button
             onContextMenu={handle}
-            selected={thread.id === selected}
             onClick={() => setSelected(thread.id)}
+            className={
+                `block hover:bg-purple-400 rounded p-1 text-start` +
+                (selected === thread.id ? ' bg-purple-600' : ' bg-slate-700')
+            }
         >
-            <ListItemIcon>
-                <TagIcon />
-            </ListItemIcon>
-            <ListItemText>{thread.name}</ListItemText>
+            <TagIcon />
+            {thread.name}
 
             <Menu {...menuProps}>
                 <MenuItemCopyID close={close} id={thread.id} />
@@ -47,7 +43,7 @@ export const NavItem: FC<Props> = ({ thread, selected, setSelected }) => {
                     }}
                 />
             </Menu>
-        </ListItemButton>
+        </button>
     );
 };
 
@@ -56,14 +52,15 @@ export const NavHomeItem: FC<Omit<Props, 'thread'>> = ({
     setSelected,
 }) => {
     return (
-        <ListItemButton
-            selected={!selected}
+        <button
             onClick={() => setSelected(undefined)}
+            className={
+                `block hover:bg-purple-400 rounded p-1 text-start` +
+                (!selected ? ' bg-purple-600' : ' bg-slate-700')
+            }
         >
-            <ListItemIcon>
-                <HomeIcon />
-            </ListItemIcon>
-            <ListItemText>Home</ListItemText>
-        </ListItemButton>
+            <HomeIcon />
+            Home
+        </button>
     );
 };

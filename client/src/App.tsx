@@ -1,12 +1,4 @@
-import {
-    Button,
-    CircularProgress,
-    Grid,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    TextField,
-} from '@mui/material';
+import { CircularProgress, Grid, TextField } from '@mui/material';
 import { FC, Suspense, useEffect, useState } from 'react';
 import { trpc } from '.';
 import { Messages } from './messages/Messages';
@@ -64,13 +56,13 @@ export const App: FC = () => {
     }
 
     return (
-        <div className="grid grid-cols-6 h-screen w-screen overflow-hidden">
-            <div className="col-span-1">
+        <div className="grid grid-cols-6 h-screen w-screen overflow-hidden bg-slate-900 gap-2 text-white">
+            <div className="col-span-1 bg-slate-800 ">
                 <Suspense fallback={<CircularProgress />}>
                     <Nav selected={selected} setSelected={setSelected} />
                 </Suspense>
             </div>
-            <div className="col-span-4">
+            <div className="col-span-4 bg-slate-800">
                 <Suspense fallback={<CircularProgress />}>
                     {selected ? (
                         <Messages threadId={selected} />
@@ -82,15 +74,10 @@ export const App: FC = () => {
                     )}
                 </Suspense>
             </div>
-            <div className="col-span-1">
-                <ListItem
-                    secondaryAction={<Button onClick={reset}>Logout</Button>}
-                >
-                    <ListItemAvatar>
-                        <UserAvatar {...user} />
-                    </ListItemAvatar>
-                    <ListItemText primary={user.name} />
-                </ListItem>
+            <div className="col-span-1 flex justify-center items-center gap-4 bg-slate-800">
+                <UserAvatar {...user} />
+                <span className="block hover:underline">{user.name}</span>
+                <button onClick={reset}>Logout</button>
             </div>
         </div>
     );
