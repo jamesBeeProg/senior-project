@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { initTRPC, TRPCError } from '@trpc/server';
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import { Server } from 'ws';

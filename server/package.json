@@ -8,6 +8,7 @@
     },
     "devDependencies": {
         "@types/eslint": "^8",
+        "@types/jsonwebtoken": "^8",
         "@types/node": "^18.11.6",
         "@types/ws": "^8.5.3",
         "@typescript-eslint/eslint-plugin": "latest",
@@ -21,6 +22,8 @@
         "@prisma/client": "^4.5.0",
         "@trpc/server": "10.0.0-proxy-beta.26",
         "@yarnpkg/pnpify": "^4.0.0-rc.26",
+        "dotenv": "^16.0.3",
+        "jsonwebtoken": "^8.5.1",
         "ws": "^8.10.0",
         "zod": "^3.19.1"
     },
