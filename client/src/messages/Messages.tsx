@@ -6,9 +6,10 @@ import { MessageAuthor } from './MessageAuthor';
 
 interface Props {
     threadId: string;
+    userId: string;
 }
 
-export const Messages: FC<Props> = ({ threadId }) => {
+export const Messages: FC<Props> = ({ threadId, userId }) => {
     const { data: messages } = trpc.messages.getMessages.useQuery({ threadId });
     const { mutate: createMessage } = trpc.messages.createMessage.useMutation();
 
@@ -56,7 +57,7 @@ export const Messages: FC<Props> = ({ threadId }) => {
             <div className="flex flex-grow flex-col-reverse overflow-auto mb-4 p-4">
                 {messages?.map((message, index, messages) => (
                     <Fragment key={message.id}>
-                        <MessageItem message={message} />
+                        <MessageItem message={message} userId={userId} />
 
                         {messages[index + 1]?.authorId !== message.authorId && (
                             <MessageAuthor author={message.author} />

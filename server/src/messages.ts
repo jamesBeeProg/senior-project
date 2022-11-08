@@ -2,6 +2,7 @@ import { authProcedure, prisma, trpc } from '.';
 import z from 'zod';
 import { emitEvent, subscribe } from './events';
 import { Message, User } from '../prisma/generated';
+import { TRPCError } from '@trpc/server';
 
 export interface MessageEvents {
     messageCreated: Message & { author: User };
@@ -54,8 +55,16 @@ export const messageRouter = trpc.router({
 
     deleteMessage: trpc.procedure
         .input(z.object({ id: z.string().cuid() }))
-        .mutation(async ({ input }) => {
-            const message = await prisma.message.delete({ where: input });
+        .mutation(async ({ input, ctx }) => {
+            const message = await prisma.message.findFirstOrThrow({
+                where: input,
+            });
+
+            if (message.authorId !== ctx.userId) {
+                throw new TRPCError({ code: 'UNAUTHORIZED' });
+            }
+
+            await prisma.message.delete({ where: input });
             emitEvent('messageDeleted', message);
             return message;
         }),

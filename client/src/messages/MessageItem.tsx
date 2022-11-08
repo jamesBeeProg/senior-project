@@ -6,10 +6,11 @@ import { useContextMenu } from '../contextMenu/useContextMenu';
 import { trpc } from '..';
 
 interface Props {
+    userId: string;
     message: Message;
 }
 
-export const MessageItem: FC<Props> = ({ message }) => {
+export const MessageItem: FC<Props> = ({ message, userId }) => {
     const { mutate: deleteMessage } = trpc.messages.deleteMessage.useMutation();
     const messageContext = useContextMenu();
 
@@ -24,14 +25,16 @@ export const MessageItem: FC<Props> = ({ message }) => {
 
             <Menu {...messageContext.menuProps}>
                 <MenuItemCopyID close={messageContext.close} id={message.id} />
-                <MenuItemDelete
-                    label="message"
-                    name="this message"
-                    close={messageContext.close}
-                    onClick={() => {
-                        deleteMessage(message);
-                    }}
-                />
+                {userId === message.authorId && (
+                    <MenuItemDelete
+                        label="message"
+                        name="this message"
+                        close={messageContext.close}
+                        onClick={() => {
+                            deleteMessage(message);
+                        }}
+                    />
+                )}
             </Menu>
         </div>
     );

@@ -60,7 +60,7 @@ export const App: FC = () => {
             <div className="col-span-4 bg-neutral-800">
                 <Suspense fallback={<CircularProgress />}>
                     {selected ? (
-                        <Messages threadId={selected} />
+                        <Messages threadId={selected} userId={user.id} />
                     ) : (
                         <Threads
                             selected={selected}
