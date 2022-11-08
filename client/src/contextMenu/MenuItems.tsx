@@ -54,6 +54,13 @@ export const MenuItemDelete: FC<MenuItemDeleteProps> = ({
         <MenuItem
             onClick={async (e) => {
                 e.stopPropagation();
+
+                if (e.shiftKey) {
+                    onClick();
+                    close();
+                    return;
+                }
+
                 setOpen(true);
             }}
         >
