@@ -4,6 +4,10 @@ import { Menu } from '@mui/material';
 import { MenuItemCopyID, MenuItemDelete } from '../contextMenu/MenuItems';
 import { useContextMenu } from '../contextMenu/useContextMenu';
 import { trpc } from '..';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 interface Props {
     userId: string;
@@ -20,7 +24,12 @@ export const MessageItem: FC<Props> = ({ message, userId }) => {
                 onContextMenu={messageContext.handle}
                 className="block whitespace-pre-wrap ml-14"
             >
-                {message.content}
+                <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                >
+                    {message.content}
+                </ReactMarkdown>
             </span>
 
             <Menu {...messageContext.menuProps}>

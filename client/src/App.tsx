@@ -29,7 +29,7 @@ export const App: FC = () => {
             <div className="grid place-items-center h-screen overflow-hidden bg-neutral-900 text-text">
                 <input
                     className="w-2/6 bg-neutral-700 rounded p-4"
-                    placeholder="User ID"
+                    placeholder="Token"
                     value={userId}
                     onChange={(e) => {
                         setUserId(e.target.value);

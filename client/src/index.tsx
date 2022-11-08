@@ -17,7 +17,7 @@ export const Index: FC = () => {
                     client: createWSClient({
                         url:
                             localStorage.getItem('url') ??
-                            'ws://localhost:3000',
+                            'ws://192.168.106.20:3000',
                     }),
                 }),
             ],
