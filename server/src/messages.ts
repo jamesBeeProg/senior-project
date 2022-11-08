@@ -4,7 +4,7 @@ import { emitEvent, subscribe } from './events';
 import { Message, User } from '../prisma/generated';
 
 export interface MessageEvents {
-    messageCreated: Message & { author: User | null };
+    messageCreated: Message & { author: User };
     messageDeleted: Message;
 }
 

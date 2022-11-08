@@ -6,7 +6,7 @@ import { useContextMenu } from '../contextMenu/useContextMenu';
 import { UserAvatar } from '../users/UserAvatar';
 
 interface Props {
-    author: User | null;
+    author: User;
 }
 
 export const MessageAuthor: FC<Props> = ({ author }) => {
@@ -14,20 +14,17 @@ export const MessageAuthor: FC<Props> = ({ author }) => {
 
     return (
         <div className="flex items-center gap-4">
-            <UserAvatar name={author?.name ?? 'Server'} color={author?.color} />
+            <UserAvatar name={author.name} color={author?.color} />
 
             <span
                 onContextMenu={authorContext.handle}
                 className="block hover:underline"
             >
-                {author?.name ?? 'Server'}
+                {author.name}
             </span>
 
             <Menu {...authorContext.menuProps}>
-                <MenuItemCopyID
-                    close={authorContext.close}
-                    id={author?.id ?? ''}
-                />
+                <MenuItemCopyID close={authorContext.close} id={author.id} />
             </Menu>
         </div>
     );
