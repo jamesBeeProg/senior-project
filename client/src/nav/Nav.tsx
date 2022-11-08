@@ -44,11 +44,13 @@ export const Nav: FC<Props> = (props) => {
     });
 
     return (
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-4 p-4 h-screen">
             <NavHomeItem {...props} />
-            {threads?.map((thread) => (
-                <NavItem key={thread.id} thread={thread} {...props} />
-            ))}
+            <div className="flex flex-col gap-4 overflow-auto">
+                {threads?.map((thread) => (
+                    <NavItem key={thread.id} thread={thread} {...props} />
+                ))}
+            </div>
         </div>
     );
 };

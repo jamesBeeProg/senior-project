@@ -26,7 +26,7 @@ export const App: FC = () => {
 
     if (error || !user) {
         return (
-            <div className="grid place-items-center h-screen overflow-hidden bg-neutral-900  text-text">
+            <div className="grid place-items-center h-screen overflow-hidden bg-neutral-900 text-text">
                 <input
                     className="w-2/6 bg-neutral-700 rounded p-4"
                     placeholder="User ID"
@@ -48,7 +48,10 @@ export const App: FC = () => {
     }
 
     return (
-        <div className="grid grid-cols-6 h-screen w-screen overflow-hidden bg-neutral-900 gap-2 text-text">
+        <div
+            className="grid grid-cols-6 h-screen w-screen overflow-hidden bg-neutral-900 gap-2 text-text"
+            onContextMenu={(e) => e.preventDefault()}
+        >
             <div className="col-span-1 bg-neutral-800 ">
                 <Suspense fallback={<CircularProgress />}>
                     <Nav selected={selected} setSelected={setSelected} />
