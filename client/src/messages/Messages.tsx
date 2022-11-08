@@ -27,6 +27,28 @@ export const Messages: FC<Props> = ({ threadId }) => {
         },
     );
 
+    trpc.messages.messageDeleted.useSubscription(
+        { threadId },
+        {
+            onData(deletedMessage) {
+                context.messages.getMessages.setData(
+                    produce((messages) => {
+                        const index = messages?.findIndex(
+                            (message) => message.id === deletedMessage.id,
+                        );
+
+                        if (index === undefined) {
+                            return;
+                        }
+
+                        messages?.splice(index, 1);
+                    }),
+                    { threadId },
+                );
+            },
+        },
+    );
+
     const [content, setContent] = useState('');
 
     return (

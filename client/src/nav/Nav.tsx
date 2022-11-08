@@ -11,10 +11,10 @@ interface Props {
 export const Nav: FC<Props> = (props) => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
 
-    const utils = trpc.useContext();
+    const context = trpc.useContext();
     trpc.threads.threadCreated.useSubscription(undefined, {
         onData(createdThread) {
-            utils.threads.getThreads.setData(
+            context.threads.getThreads.setData(
                 produce((threads) => {
                     // Add thread to cache
                     threads?.push(createdThread);
@@ -24,12 +24,12 @@ export const Nav: FC<Props> = (props) => {
     });
 
     trpc.threads.threadDeleted.useSubscription(undefined, {
-        onData(createdThread) {
-            utils.threads.getThreads.setData(
+        onData(deletedThread) {
+            context.threads.getThreads.setData(
                 produce((threads) => {
                     // Find the index of the thread that was deleted
                     const index = threads?.findIndex(
-                        (thread) => thread.id === createdThread.id,
+                        (thread) => thread.id === deletedThread.id,
                     );
 
                     if (index === undefined) {

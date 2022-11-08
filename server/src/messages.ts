@@ -5,6 +5,7 @@ import { Message, User } from '../prisma/generated';
 
 export interface MessageEvents {
     messageCreated: Message & { author: User | null };
+    messageDeleted: Message;
 }
 
 export const messageRouter = trpc.router({
@@ -45,6 +46,24 @@ export const messageRouter = trpc.router({
         .input(z.object({ threadId: z.string().cuid() }))
         .subscription(({ input }) => {
             return subscribe('messageCreated', (data) => {
+                if (input.threadId === data.threadId) {
+                    return data;
+                }
+            });
+        }),
+
+    deleteMessage: trpc.procedure
+        .input(z.object({ id: z.string().cuid() }))
+        .mutation(async ({ input }) => {
+            const message = await prisma.message.delete({ where: input });
+            emitEvent('messageDeleted', message);
+            return message;
+        }),
+
+    messageDeleted: trpc.procedure
+        .input(z.object({ threadId: z.string().cuid() }))
+        .subscription(({ input }) => {
+            return subscribe('messageDeleted', (data) => {
                 if (input.threadId === data.threadId) {
                     return data;
                 }
