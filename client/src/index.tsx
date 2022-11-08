@@ -14,7 +14,11 @@ export const Index: FC = () => {
         return trpc.createClient({
             links: [
                 wsLink({
-                    client: createWSClient({ url: 'ws://localhost:3000' }),
+                    client: createWSClient({
+                        url:
+                            localStorage.getItem('url') ??
+                            'ws://localhost:3000',
+                    }),
                 }),
             ],
         });
