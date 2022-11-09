@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { trpc } from '..';
 import { Auth } from './Auth';
 
-export const App: FC = () => {
+export const Connect: FC = () => {
     const [trpcClient] = useState(() => {
         return trpc.createClient({
             links: [
