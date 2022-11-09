@@ -2,8 +2,9 @@ import { Observer, observable } from '@trpc/server/observable';
 import EventEmitter from 'events';
 import { MessageEvents } from './messages';
 import { ThreadEvents } from './threads';
+import { UserEvents } from './user';
 
-interface Events extends ThreadEvents, MessageEvents {}
+interface Events extends ThreadEvents, MessageEvents, UserEvents {}
 
 const eventEmitter = new EventEmitter();
 

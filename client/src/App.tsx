@@ -4,15 +4,15 @@ import { trpc } from '.';
 import { Messages } from './messages/Messages';
 import { Nav } from './nav/Nav';
 import { Threads } from './threads/Threads';
-import { UserAvatar } from './users/UserAvatar';
+import { Users } from './users/Users';
 
 export const App: FC = () => {
     const [selected, setSelected] = useState<string>();
     const {
-        mutate,
+        mutate: login,
         data: user,
         error,
-        reset,
+        reset: logout,
     } = trpc.users.login.useMutation({
         useErrorBoundary: false,
     });
@@ -20,7 +20,7 @@ export const App: FC = () => {
 
     useEffect(() => {
         if (userId) {
-            mutate({ id: userId });
+            login({ id: userId });
         }
     }, []);
 
@@ -40,7 +40,7 @@ export const App: FC = () => {
                             return;
                         }
 
-                        mutate({ id: userId });
+                        login({ id: userId });
                     }}
                 />
             </div>
@@ -70,11 +70,9 @@ export const App: FC = () => {
                 </Suspense>
             </div>
             <div className="col-span-1 flex justify-center items-center gap-4 bg-neutral-800">
-                <UserAvatar {...user} />
-                <span className="block">{user.name}</span>
-                <button className="hover:underline" onClick={reset}>
-                    Logout
-                </button>
+                <Suspense fallback={<CircularProgress />}>
+                    <Users user={user} logout={logout} />
+                </Suspense>
             </div>
         </div>
     );
