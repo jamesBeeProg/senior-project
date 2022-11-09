@@ -1,10 +1,19 @@
-import { FC, useEffect, useState } from 'react';
+import { createContext, FC, useContext, useEffect, useState } from 'react';
+import { User } from 'splist-server/prisma/generated';
 import { trpc } from '..';
 import { Login } from './Login';
 import { Main } from './Main';
 
+interface AuthContext {
+    logout(): void;
+    user: User;
+}
+
+const AuthContext = createContext(null as unknown as AuthContext);
+
+export const useAuth = () => useContext(AuthContext);
+
 export const Auth: FC = () => {
-    const [selected, setSelected] = useState<string>();
     const {
         mutate: login,
         data: user,
@@ -26,11 +35,8 @@ export const Auth: FC = () => {
     }
 
     return (
-        <Main
-            selected={selected}
-            setSelected={setSelected}
-            user={user}
-            logout={logout}
-        />
+        <AuthContext.Provider value={{ user, logout }}>
+            <Main />
+        </AuthContext.Provider>
     );
 };

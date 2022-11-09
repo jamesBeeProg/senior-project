@@ -1,14 +1,10 @@
 import { FC } from 'react';
-import { User } from 'splist-server/prisma/generated';
 import { trpc } from '..';
+import { useAuth } from '../app/Auth';
 import { MessageAuthor } from '../messages/MessageAuthor';
 
-interface Props {
-    user: User;
-    logout(): void;
-}
-
-export const Users: FC<Props> = ({ user, logout }) => {
+export const Users: FC = () => {
+    const { user, logout } = useAuth();
     const { data: users } = trpc.users.getUsers.useQuery();
 
     return (

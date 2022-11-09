@@ -10,8 +10,6 @@ export const Messages: FC = () => {
     const { data: messages } = trpc.messages.getMessages.useQuery({ threadId });
     const { mutate: createMessage } = trpc.messages.createMessage.useMutation();
 
-    const userId = '';
-
     const context = trpc.useContext();
     trpc.messages.messageCreated.useSubscription(
         { threadId },
@@ -56,7 +54,7 @@ export const Messages: FC = () => {
             <div className="flex flex-grow flex-col-reverse overflow-auto mb-4 p-4">
                 {messages?.map((message, index, messages) => (
                     <Fragment key={message.id}>
-                        <MessageItem message={message} userId={userId} />
+                        <MessageItem message={message} />
 
                         {messages[index + 1]?.authorId !== message.authorId && (
                             <MessageAuthor author={message.author} />

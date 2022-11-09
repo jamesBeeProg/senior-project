@@ -13,13 +13,14 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
+import { useAuth } from '../app/Auth';
 
 interface Props {
-    userId: string;
     message: Message;
 }
 
-export const MessageItem: FC<Props> = ({ message, userId }) => {
+export const MessageItem: FC<Props> = ({ message }) => {
+    const { user } = useAuth();
     const { mutate: deleteMessage } = trpc.messages.deleteMessage.useMutation();
     const contextMenu = useContextMenu();
 
@@ -44,7 +45,7 @@ export const MessageItem: FC<Props> = ({ message, userId }) => {
                     content={message.content}
                 />
                 <MenuItemCopyID close={contextMenu.close} id={message.id} />
-                {userId === message.authorId && (
+                {user.id === message.authorId && (
                     <MenuItemDelete
                         label="message"
                         name="this message"
