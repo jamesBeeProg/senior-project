@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const MessageAuthor: FC<Props> = ({ author }) => {
-    const authorContext = useContextMenu();
+    const contextMenu = useContextMenu();
 
     return (
         <div className="flex items-center gap-4 p-1">
@@ -21,15 +21,15 @@ export const MessageAuthor: FC<Props> = ({ author }) => {
             />
 
             <span
-                onContextMenu={authorContext.handle}
+                onContextMenu={contextMenu.handle}
                 className="block hover:underline hover:!text-text"
                 style={{ color: '#' + author.color }}
             >
                 {author.name}
             </span>
 
-            <Menu {...authorContext.menuProps}>
-                <MenuItemCopyID close={authorContext.close} id={author.id} />
+            <Menu {...contextMenu.menuProps}>
+                <MenuItemCopyID close={contextMenu.close} id={author.id} />
             </Menu>
         </div>
     );

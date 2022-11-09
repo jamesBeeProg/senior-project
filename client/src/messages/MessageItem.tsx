@@ -1,7 +1,11 @@
 import { FC } from 'react';
 import type { Message } from 'splist-server/prisma/generated';
 import { Menu } from '@mui/material';
-import { MenuItemCopyID, MenuItemDelete } from '../contextMenu/MenuItems';
+import {
+    MenuItemCopyContent,
+    MenuItemCopyID,
+    MenuItemDelete,
+} from '../contextMenu/MenuItems';
 import { useContextMenu } from '../contextMenu/useContextMenu';
 import { trpc } from '..';
 import ReactMarkdown from 'react-markdown';
@@ -17,12 +21,12 @@ interface Props {
 
 export const MessageItem: FC<Props> = ({ message, userId }) => {
     const { mutate: deleteMessage } = trpc.messages.deleteMessage.useMutation();
-    const messageContext = useContextMenu();
+    const contextMenu = useContextMenu();
 
     return (
         <div className="hover:bg-neutral-700 p-1 rounded">
             <span
-                onContextMenu={messageContext.handle}
+                onContextMenu={contextMenu.handle}
                 className="block whitespace-pre-wrap ml-14"
             >
                 <ReactMarkdown
@@ -33,13 +37,18 @@ export const MessageItem: FC<Props> = ({ message, userId }) => {
                 </ReactMarkdown>
             </span>
 
-            <Menu {...messageContext.menuProps}>
-                <MenuItemCopyID close={messageContext.close} id={message.id} />
+            <Menu {...contextMenu.menuProps}>
+                <MenuItemCopyContent
+                    close={contextMenu.close}
+                    label={'Content'}
+                    content={message.content}
+                />
+                <MenuItemCopyID close={contextMenu.close} id={message.id} />
                 {userId === message.authorId && (
                     <MenuItemDelete
                         label="message"
                         name="this message"
-                        close={messageContext.close}
+                        close={contextMenu.close}
                         onClick={() => {
                             deleteMessage(message);
                         }}

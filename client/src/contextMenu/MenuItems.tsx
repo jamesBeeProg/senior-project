@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PinIcon from '@mui/icons-material/Pin';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { FC, useState } from 'react';
 
 interface MenuItemProps {
@@ -33,6 +34,30 @@ export const MenuItemCopyID: FC<MenuItemCopyIDProps> = ({ id, close }) => (
             <PinIcon />
         </ListItemIcon>
         <ListItemText>Copy ID</ListItemText>
+    </MenuItem>
+);
+
+interface MenuItemCopyContentProps extends MenuItemProps {
+    label: string;
+    content: string;
+}
+
+export const MenuItemCopyContent: FC<MenuItemCopyContentProps> = ({
+    label,
+    content,
+    close,
+}) => (
+    <MenuItem
+        onClick={async (e) => {
+            e.stopPropagation();
+            await navigator.clipboard.writeText(content);
+            close();
+        }}
+    >
+        <ListItemIcon>
+            <ContentCopyIcon />
+        </ListItemIcon>
+        <ListItemText>Copy {label}</ListItemText>
     </MenuItem>
 );
 
