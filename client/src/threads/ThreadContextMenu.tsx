@@ -2,7 +2,11 @@ import { Menu } from '@mui/material';
 import { FC } from 'react';
 import type { Thread } from 'splist-server/prisma/generated';
 import { trpc } from '..';
-import { MenuItemCopyID, MenuItemDelete } from '../contextMenu/MenuItems';
+import {
+    MenuItemCopyContent,
+    MenuItemCopyID,
+    MenuItemDelete,
+} from '../contextMenu/MenuItems';
 import { UseContextMenu } from '../contextMenu/useContextMenu';
 import { SelectedThreadProps } from './Threads';
 
@@ -21,6 +25,11 @@ export const ThreadContextMenu: FC<Props> = ({
 
     return (
         <Menu {...menuProps}>
+            <MenuItemCopyContent
+                close={close}
+                label="Title"
+                content={thread.name}
+            />
             <MenuItemCopyID close={close} id={thread.id} />
             <MenuItemDelete
                 label="thread"
