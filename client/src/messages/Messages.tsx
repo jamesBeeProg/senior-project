@@ -3,15 +3,14 @@ import produce from 'immer';
 import { trpc } from '..';
 import { MessageItem } from './MessageItem';
 import { MessageAuthor } from './MessageAuthor';
+import { useParams } from 'react-router-dom';
 
-interface Props {
-    threadId: string;
-    userId: string;
-}
-
-export const Messages: FC<Props> = ({ threadId, userId }) => {
+export const Messages: FC = () => {
+    const threadId = useParams().threadId!;
     const { data: messages } = trpc.messages.getMessages.useQuery({ threadId });
     const { mutate: createMessage } = trpc.messages.createMessage.useMutation();
+
+    const userId = '';
 
     const context = trpc.useContext();
     trpc.messages.messageCreated.useSubscription(

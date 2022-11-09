@@ -1,5 +1,6 @@
 import { Menu } from '@mui/material';
 import { FC } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { Thread } from 'splist-server/prisma/generated';
 import { trpc } from '..';
 import {
@@ -8,19 +9,14 @@ import {
     MenuItemDelete,
 } from '../contextMenu/MenuItems';
 import { UseContextMenu } from '../contextMenu/useContextMenu';
-import { SelectedThreadProps } from './Threads';
 
-interface Props extends SelectedThreadProps, Omit<UseContextMenu, 'handle'> {
+interface Props extends Omit<UseContextMenu, 'handle'> {
     thread: Thread;
 }
 
-export const ThreadContextMenu: FC<Props> = ({
-    thread,
-    close,
-    menuProps,
-    selected,
-    setSelected,
-}) => {
+export const ThreadContextMenu: FC<Props> = ({ thread, close, menuProps }) => {
+    const { threadId } = useParams();
+    const navigate = useNavigate();
     const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
 
     return (
@@ -37,8 +33,8 @@ export const ThreadContextMenu: FC<Props> = ({
                 close={close}
                 onClick={() => {
                     deleteThread(thread);
-                    if (selected === thread.id) {
-                        setSelected(undefined);
+                    if (threadId === thread.id) {
+                        navigate('/');
                     }
                 }}
             />

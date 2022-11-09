@@ -1,5 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { FC, Suspense } from 'react';
+import { Outlet } from 'react-router-dom';
 import type { User } from 'splist-server/prisma/generated';
 import { Messages } from '../messages/Messages';
 import { Nav } from '../nav/Nav';
@@ -24,14 +25,7 @@ export const Main: FC<Props> = ({ selected, setSelected, user, logout }) => {
             </div>
             <div className="col-span-4 bg-neutral-800">
                 <Suspense fallback={<CircularProgress />}>
-                    {selected ? (
-                        <Messages threadId={selected} userId={user.id} />
-                    ) : (
-                        <Threads
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                    )}
+                    <Outlet />
                 </Suspense>
             </div>
             <div className="col-span-1 flex justify-center items-center gap-4 bg-neutral-800">

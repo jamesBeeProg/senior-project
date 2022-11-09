@@ -3,49 +3,45 @@ import TagIcon from '@mui/icons-material/Tag';
 import HomeIcon from '@mui/icons-material/Home';
 import type { Thread } from 'splist-server/prisma/generated';
 import { useContextMenu } from '../contextMenu/useContextMenu';
-import { SelectedThreadProps } from '../threads/Threads';
 import { ThreadContextMenu } from '../threads/ThreadContextMenu';
+import { Link, useParams } from 'react-router-dom';
 
-interface Props extends SelectedThreadProps {
+interface Props {
     thread: Thread;
 }
 
-export const NavItem: FC<Props> = (props) => {
+export const NavItem: FC<Props> = ({ thread }) => {
+    const { threadId } = useParams();
     const contextMenu = useContextMenu();
 
     return (
-        <button
+        <Link
+            to={`/${thread.id}`}
             onContextMenu={contextMenu.handle}
-            onClick={() => props.setSelected(props.thread.id)}
             className={
                 `block hover:bg-primary-400 rounded p-1 text-start` +
-                (props.selected === props.thread.id
-                    ? ' bg-primary-600'
-                    : ' bg-neutral-700')
+                (threadId === thread.id ? ' bg-primary-600' : ' bg-neutral-700')
             }
         >
-            <TagIcon />
-            {props.thread.name}
-
-            <ThreadContextMenu {...props} {...contextMenu} />
-        </button>
+            <TagIcon /> {thread.name}
+            <ThreadContextMenu thread={thread} {...contextMenu} />
+        </Link>
     );
 };
 
-export const NavHomeItem: FC<Omit<Props, 'thread'>> = ({
-    selected,
-    setSelected,
-}) => {
+export const NavHomeItem: FC = () => {
+    const { threadId } = useParams();
+
     return (
-        <button
-            onClick={() => setSelected(undefined)}
+        <Link
+            to="/"
             className={
                 `block hover:bg-primary-400 rounded p-1 text-start` +
-                (!selected ? ' bg-primary-600' : ' bg-neutral-700')
+                (!threadId ? ' bg-primary-600' : ' bg-neutral-700')
             }
         >
             <HomeIcon />
             Home
-        </button>
+        </Link>
     );
 };

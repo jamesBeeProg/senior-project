@@ -1,26 +1,25 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { FC } from 'react';
 import TagIcon from '@mui/icons-material/Tag';
 import type { Thread } from 'splist-server/prisma/generated';
 import { useContextMenu } from '../contextMenu/useContextMenu';
 import { ThreadContextMenu } from './ThreadContextMenu';
+import { Link } from 'react-router-dom';
 
 interface Props {
-    selected: string | undefined;
-    setSelected: Dispatch<SetStateAction<string | undefined>>;
     thread: Thread;
 }
 
-export const ThreadItem: FC<Props> = (props) => {
+export const ThreadItem: FC<Props> = ({ thread }) => {
     const contextMenu = useContextMenu();
 
     return (
-        <div
+        <Link
             onContextMenu={contextMenu.handle}
-            onClick={() => props.setSelected(props.thread.id)}
+            to={`/${thread.id}`}
             className="bg-neutral-700 hover:bg-primary-400  rounded p-4 m-4"
         >
-            <TagIcon /> {props.thread.name}
-            <ThreadContextMenu {...props} {...contextMenu} />
-        </div>
+            <TagIcon /> {thread.name}
+            <ThreadContextMenu thread={thread} {...contextMenu} />
+        </Link>
     );
 };

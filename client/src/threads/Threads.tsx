@@ -1,13 +1,8 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import { trpc } from '..';
 import { ThreadItem } from './ThreadItem';
 
-export interface SelectedThreadProps {
-    selected: string | undefined;
-    setSelected: Dispatch<SetStateAction<string | undefined>>;
-}
-
-export const Threads: FC<SelectedThreadProps> = (props) => {
+export const Threads: FC = () => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
     const { mutate: createThread } = trpc.threads.createThread.useMutation();
 
@@ -17,7 +12,7 @@ export const Threads: FC<SelectedThreadProps> = (props) => {
         <div className="flex flex-col h-screen">
             <div className="flex flex-grow flex-col overflow-auto mb-4">
                 {threads?.map((thread) => (
-                    <ThreadItem key={thread.id} thread={thread} {...props} />
+                    <ThreadItem key={thread.id} thread={thread} />
                 ))}
             </div>
             <input
