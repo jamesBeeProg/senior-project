@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { trpc } from '..';
 import produce from 'immer';
-import { NavHomeItem, NavItem } from './NavItem';
+import { NavHomeItem, NavItem, NavUserItem } from './NavItem';
 
 export const Nav: FC = () => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
@@ -41,6 +41,7 @@ export const Nav: FC = () => {
     return (
         <div className="flex flex-col gap-4 p-4 h-screen">
             <NavHomeItem />
+            <NavUserItem />
             <div className="flex flex-col gap-4 overflow-auto">
                 {threads?.map((thread) => (
                     <NavItem key={thread.id} thread={thread} />

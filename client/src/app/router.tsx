@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Messages } from '../messages/Messages';
 import { Threads } from '../threads/Threads';
+import { UserEdit } from '../users/UserEdit';
 import { Connect } from './Connect';
 
 export const router = createBrowserRouter([
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
             {
                 path: ':threadId',
                 element: <Messages />,
+            },
+            {
+                path: 'user',
+                element: <UserEdit />,
             },
         ],
     },

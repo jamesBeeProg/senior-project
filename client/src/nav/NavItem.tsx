@@ -1,26 +1,28 @@
 import { FC } from 'react';
 import TagIcon from '@mui/icons-material/Tag';
 import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
 import type { Thread } from 'splist-server/prisma/generated';
 import { useContextMenu } from '../contextMenu/useContextMenu';
 import { ThreadContextMenu } from '../threads/ThreadContextMenu';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 
 interface Props {
     thread: Thread;
 }
 
 export const NavItem: FC<Props> = ({ thread }) => {
-    const { threadId } = useParams();
+    const url = `/${thread.id}`;
+    const selected = useMatch(url);
     const contextMenu = useContextMenu();
 
     return (
         <Link
-            to={`/${thread.id}`}
+            to={url}
             onContextMenu={contextMenu.handle}
             className={
-                `block hover:bg-primary-400 rounded p-1 text-start` +
-                (threadId === thread.id ? ' bg-primary-600' : ' bg-neutral-700')
+                `block hover:bg-primary-400 rounded p-1 text-start ` +
+                (selected ? 'bg-primary-600' : 'bg-neutral-700')
             }
         >
             <TagIcon /> {thread.name}
@@ -30,18 +32,35 @@ export const NavItem: FC<Props> = ({ thread }) => {
 };
 
 export const NavHomeItem: FC = () => {
-    const { threadId } = useParams();
+    const selected = useMatch('/');
 
     return (
         <Link
             to="/"
             className={
                 `block hover:bg-primary-400 rounded p-1 text-start` +
-                (!threadId ? ' bg-primary-600' : ' bg-neutral-700')
+                (selected ? ' bg-primary-600' : ' bg-neutral-700')
             }
         >
             <HomeIcon />
             Home
+        </Link>
+    );
+};
+
+export const NavUserItem: FC = () => {
+    const selected = useMatch('/user');
+
+    return (
+        <Link
+            to="/user"
+            className={
+                `block hover:bg-primary-400 rounded p-1 text-start` +
+                (selected ? ' bg-primary-600' : ' bg-neutral-700')
+            }
+        >
+            <PersonIcon />
+            User
         </Link>
     );
 };
