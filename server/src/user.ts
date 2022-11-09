@@ -7,7 +7,7 @@ import { emitEvent, subscribe } from './events';
 
 export interface UserEvents {
     userCreated: User;
-    userUpdated: User;
+    userUpdated: User & { status?: boolean };
 }
 
 export const userRouter = trpc.router({

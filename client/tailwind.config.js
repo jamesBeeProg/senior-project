@@ -8,6 +8,7 @@ module.exports = {
             neutral: colors.slate,
             primary: colors.purple,
             text: colors.white,
+            online: colors.green,
         },
     },
     plugins: [],
