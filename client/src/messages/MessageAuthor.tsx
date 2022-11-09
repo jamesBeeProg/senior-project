@@ -13,8 +13,12 @@ export const MessageAuthor: FC<Props> = ({ author }) => {
     const authorContext = useContextMenu();
 
     return (
-        <div className="flex items-center gap-4">
-            <UserAvatar name={author.name} color={author?.color} />
+        <div className="flex items-center gap-4 p-1">
+            <UserAvatar
+                name={author.name}
+                color={author.color}
+                avatar={author.avatar}
+            />
 
             <span
                 onContextMenu={authorContext.handle}

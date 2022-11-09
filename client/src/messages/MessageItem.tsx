@@ -20,7 +20,7 @@ export const MessageItem: FC<Props> = ({ message, userId }) => {
     const messageContext = useContextMenu();
 
     return (
-        <div className="hover:bg-neutral-700">
+        <div className="hover:bg-neutral-700 p-1 rounded">
             <span
                 onContextMenu={messageContext.handle}
                 className="block whitespace-pre-wrap ml-14"
