@@ -1,10 +1,8 @@
 import { Dispatch, FC, SetStateAction } from 'react';
-import { trpc } from '..';
-import { Menu } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import type { Thread } from 'splist-server/prisma/generated';
 import { useContextMenu } from '../contextMenu/useContextMenu';
-import { MenuItemCopyID, MenuItemDelete } from '../contextMenu/MenuItems';
+import { ThreadContextMenu } from './ThreadContextMenu';
 
 interface Props {
     selected: string | undefined;
@@ -12,31 +10,17 @@ interface Props {
     thread: Thread;
 }
 
-export const ThreadItem: FC<Props> = ({ thread, selected, setSelected }) => {
-    const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
-    const { handle, close, menuProps } = useContextMenu();
+export const ThreadItem: FC<Props> = (props) => {
+    const contextMenu = useContextMenu();
 
     return (
         <div
-            onContextMenu={handle}
-            onClick={() => setSelected(thread.id)}
+            onContextMenu={contextMenu.handle}
+            onClick={() => props.setSelected(props.thread.id)}
             className="bg-neutral-700 hover:bg-primary-400  rounded p-4 m-4"
         >
-            <TagIcon /> {thread.name}
-            <Menu {...menuProps}>
-                <MenuItemCopyID close={close} id={thread.id} />
-                <MenuItemDelete
-                    label="thread"
-                    name={'#' + thread.name}
-                    close={close}
-                    onClick={() => {
-                        deleteThread(thread);
-                        if (selected === thread.id) {
-                            setSelected(undefined);
-                        }
-                    }}
-                />
-            </Menu>
+            <TagIcon /> {props.thread.name}
+            <ThreadContextMenu {...props} {...contextMenu} />
         </div>
     );
 };

@@ -1,14 +1,10 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { FC } from 'react';
 import { trpc } from '..';
 import produce from 'immer';
 import { NavHomeItem, NavItem } from './NavItem';
+import { SelectedThreadProps } from '../threads/Threads';
 
-interface Props {
-    selected: string | undefined;
-    setSelected: Dispatch<SetStateAction<string | undefined>>;
-}
-
-export const Nav: FC<Props> = (props) => {
+export const Nav: FC<SelectedThreadProps> = (props) => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
 
     const context = trpc.useContext();

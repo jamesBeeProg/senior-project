@@ -2,12 +2,12 @@ import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { trpc } from '..';
 import { ThreadItem } from './ThreadItem';
 
-interface Props {
+export interface SelectedThreadProps {
     selected: string | undefined;
     setSelected: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export const Threads: FC<Props> = (props) => {
+export const Threads: FC<SelectedThreadProps> = (props) => {
     const { data: threads } = trpc.threads.getThreads.useQuery();
     const { mutate: createThread } = trpc.threads.createThread.useMutation();
 
