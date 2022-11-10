@@ -46,7 +46,7 @@ export const UserEdit: FC = () => {
 
     return (
         <div className="grid h-full place-items-center">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
                 <label>Name</label>
                 <input
                     className="bg-neutral-700 rounded p-1"

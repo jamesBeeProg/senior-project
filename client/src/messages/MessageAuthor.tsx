@@ -21,7 +21,7 @@ export const MessageAuthor: FC<Props> = ({ author }) => {
 
                     <span
                         onContextMenu={open}
-                        className="block hover:underline hover:!text-text"
+                        className="hover:underline hover:!text-text text-ellipsis overflow-hidden"
                         style={{
                             color: author.color ? '#' + author.color : '',
                         }}

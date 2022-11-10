@@ -20,14 +20,16 @@ export const UserAvatar: FC<Props> = ({
         : {};
 
     return (
-        <div
-            className="rounded-full w-10 h-10 grid place-items-center bg-contain relative bg-neutral-600"
-            style={style}
-        >
-            {!avatar && name[0]}
-            {online && (
-                <span className="w-4 h-4 rounded-full border-2 border-neutral-800 absolute bottom-0 right-0 bg-online-500" />
-            )}
+        <div>
+            <div
+                className="rounded-full w-10 h-10 grid place-items-center bg-contain relative bg-neutral-600"
+                style={style}
+            >
+                {!avatar && name[0]}
+                {online && (
+                    <span className="w-4 h-4 rounded-full border-2 border-neutral-800 absolute bottom-0 right-0 bg-online-500" />
+                )}
+            </div>
         </div>
     );
 };
