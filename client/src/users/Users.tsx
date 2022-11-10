@@ -30,7 +30,10 @@ export const Users: FC = () => {
     return (
         <div className="flex flex-col gap-4 p-4 h-screen w-full">
             <MessageAuthor key={user.id} author={user} />
-            <button className="hover:underline" onClick={logout}>
+            <button
+                className="mt-4 p-2 rounded bg-primary-600 hover:bg-primary-400"
+                onClick={logout}
+            >
                 Logout
             </button>
 

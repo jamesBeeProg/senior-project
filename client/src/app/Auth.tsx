@@ -16,11 +16,7 @@ export const useAuth = () => useContext(AuthContext);
 export const Auth: FC = () => {
     const [user, setUser] = useState<User | undefined>();
 
-    const {
-        mutate: login,
-        error,
-        reset: logout,
-    } = trpc.users.login.useMutation({
+    const { mutate: login, error } = trpc.users.login.useMutation({
         useErrorBoundary: false,
         onSuccess(data) {
             setUser(data);
@@ -47,7 +43,14 @@ export const Auth: FC = () => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, logout }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                logout() {
+                    setUser(undefined);
+                },
+            }}
+        >
             <Main />
         </AuthContext.Provider>
     );
