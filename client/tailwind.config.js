@@ -9,6 +9,7 @@ module.exports = {
             primary: colors.purple,
             text: colors.white,
             online: colors.green,
+            error: colors.red,
         },
     },
     plugins: [],
