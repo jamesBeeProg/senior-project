@@ -2,7 +2,7 @@ import { FC, Fragment, useState } from 'react';
 import produce from 'immer';
 import { trpc } from '..';
 import { MessageItem } from './MessageItem';
-import { MessageAuthor } from './MessageAuthor';
+import { User } from '../users/User';
 import { useParams } from 'react-router-dom';
 
 export const Messages: FC = () => {
@@ -57,7 +57,7 @@ export const Messages: FC = () => {
                         <MessageItem message={message} />
 
                         {messages[index + 1]?.authorId !== message.authorId && (
-                            <MessageAuthor author={message.author} />
+                            <User user={message.author} />
                         )}
                     </Fragment>
                 ))}

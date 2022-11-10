@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 import { trpc } from '..';
 import { useAuth } from '../app/Auth';
-import { MessageAuthor } from '../messages/MessageAuthor';
+import { User } from './User';
 
 export const UserEdit: FC = () => {
     const { user } = useAuth();
@@ -82,8 +82,8 @@ export const UserEdit: FC = () => {
                     onChange={(e) => setAvatar(e.target.value)}
                 />
 
-                <MessageAuthor
-                    author={{
+                <User
+                    user={{
                         id: user.id,
                         name: nameDraft,
                         color: colorDraft,

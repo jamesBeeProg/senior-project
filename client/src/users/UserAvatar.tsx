@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { ContextMenu, ContextTrigger } from '../contextMenu/ContextMenu';
+import { MenuItemCopyContent } from '../contextMenu/MenuItems';
 
 interface Props {
     name: string;
@@ -20,16 +22,29 @@ export const UserAvatar: FC<Props> = ({
         : {};
 
     return (
-        <div>
-            <div
-                className="rounded-full w-10 h-10 grid place-items-center bg-contain relative bg-neutral-600"
-                style={style}
-            >
-                {!avatar && name[0]}
-                {online && (
-                    <span className="w-4 h-4 rounded-full border-2 border-neutral-800 absolute bottom-0 right-0 bg-online-500" />
-                )}
-            </div>
-        </div>
+        <ContextTrigger>
+            {(open) => (
+                <div onContextMenu={open}>
+                    <div
+                        className="rounded-full w-10 h-10 grid place-items-center bg-contain relative bg-neutral-600"
+                        style={style}
+                    >
+                        {!avatar && name[0]}
+                        {online && (
+                            <span className="w-4 h-4 rounded-full border-2 border-neutral-800 absolute bottom-0 right-0 bg-online-500" />
+                        )}
+                    </div>
+
+                    <ContextMenu>
+                        {avatar && (
+                            <MenuItemCopyContent
+                                label="Hash"
+                                content={avatar}
+                            />
+                        )}
+                    </ContextMenu>
+                </div>
+            )}
+        </ContextTrigger>
     );
 };

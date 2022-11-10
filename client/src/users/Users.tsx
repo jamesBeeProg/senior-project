@@ -2,7 +2,7 @@ import produce from 'immer';
 import { FC } from 'react';
 import { trpc } from '..';
 import { useAuth } from '../app/Auth';
-import { MessageAuthor } from '../messages/MessageAuthor';
+import { User } from './User';
 
 export const Users: FC = () => {
     const { user, logout } = useAuth();
@@ -29,7 +29,7 @@ export const Users: FC = () => {
 
     return (
         <div className="flex flex-col gap-4 p-4 h-screen w-full">
-            <MessageAuthor key={user.id} author={user} />
+            <User key={user.id} user={user} />
             <button
                 className="mt-4 p-2 rounded bg-primary-600 hover:bg-primary-400"
                 onClick={logout}
@@ -39,7 +39,7 @@ export const Users: FC = () => {
 
             <div className="flex flex-col gap-4 overflow-y-auto">
                 {users?.map((user) => (
-                    <MessageAuthor key={user.id} author={user} />
+                    <User key={user.id} user={user} />
                 ))}
             </div>
         </div>
