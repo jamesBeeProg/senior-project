@@ -22,7 +22,9 @@ export const MessageAuthor: FC<Props> = ({ author }) => {
                     <span
                         onContextMenu={open}
                         className="block hover:underline hover:!text-text"
-                        style={{ color: '#' + author.color }}
+                        style={{
+                            color: author.color ? '#' + author.color : '',
+                        }}
                     >
                         {author.name}
                     </span>

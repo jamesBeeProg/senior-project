@@ -56,11 +56,13 @@ export const userRouter = trpc.router({
                 color: z
                     .string()
                     .regex(/^[a-f0-9]{6}$/i)
-                    .optional(),
+                    .optional()
+                    .nullable(),
                 avatar: z
                     .string()
                     .regex(/^[a-f0-9]{32}$/i)
-                    .optional(),
+                    .optional()
+                    .nullable(),
             }),
         )
         .mutation(async ({ input }) => {
@@ -73,4 +75,8 @@ export const userRouter = trpc.router({
             emitEvent('userUpdated', user);
             return user;
         }),
+
+    userUpdated: trpc.procedure.subscription(() => {
+        return subscribe('userUpdated', (data) => data);
+    }),
 });

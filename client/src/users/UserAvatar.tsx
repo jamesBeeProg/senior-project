@@ -21,7 +21,7 @@ export const UserAvatar: FC<Props> = ({
 
     return (
         <div
-            className="rounded-full w-10 h-10 grid place-items-center bg-contain relative"
+            className="rounded-full w-10 h-10 grid place-items-center bg-contain relative bg-neutral-600"
             style={style}
         >
             {!avatar && name[0]}

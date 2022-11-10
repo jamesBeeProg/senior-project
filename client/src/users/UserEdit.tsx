@@ -10,52 +10,74 @@ export const UserEdit: FC = () => {
     const [colorDraft, setColor] = useState(user.color ?? '');
     const [avatarDraft, setAvatar] = useState(user.avatar ?? '');
 
-    const colorIsValid = useMemo(() => {
+    const { mutate: updateUser } = trpc.users.updateUser.useMutation();
+
+    const color = useMemo(() => {
         if (colorDraft.length === 0) {
-            return true;
+            return null;
         }
 
-        return /^[a-f0-9]{6}$/i.test(colorDraft);
+        if (/^[a-f0-9]{6}$/i.test(colorDraft)) {
+            return colorDraft;
+        } else {
+            return undefined;
+        }
     }, [colorDraft]);
 
-    const avatarIsValid = useMemo(() => {
+    const avatar = useMemo(() => {
         if (avatarDraft.length === 0) {
-            return true;
+            return null;
         }
 
-        return /^[a-f0-9]{32}$/i.test(avatarDraft);
+        if (/^[a-f0-9]{32}$/i.test(avatarDraft)) {
+            return avatarDraft;
+        } else {
+            return undefined;
+        }
     }, [avatarDraft]);
+
+    const submit = () =>
+        updateUser({
+            id: user.id,
+            name: nameDraft,
+            color,
+            avatar,
+        });
 
     return (
         <div className="grid h-full place-items-center">
             <div className="flex flex-col">
                 <label>Name</label>
                 <input
-                    className="bg-neutral-700 rounded"
+                    className="bg-neutral-700 rounded p-1"
                     value={nameDraft}
                     onChange={(e) => setName(e.target.value)}
                 />
 
                 <label
-                    className={'mt-4 ' + (colorIsValid ? '' : 'text-error-500')}
+                    className={
+                        'mt-4 ' +
+                        (typeof color === 'undefined' ? 'text-error-500' : '')
+                    }
                 >
                     Color
                 </label>
                 <input
-                    className="bg-neutral-700 rounded"
+                    className="bg-neutral-700 rounded p-1"
                     value={colorDraft ?? ''}
                     onChange={(e) => setColor(e.target.value)}
                 />
 
                 <label
                     className={
-                        'mt-4 ' + (avatarIsValid ? '' : 'text-error-500')
+                        'mt-4 ' +
+                        (typeof avatar === 'undefined' ? 'text-error-500' : '')
                     }
                 >
                     Avatar
                 </label>
                 <input
-                    className="mb-4 bg-neutral-700 rounded"
+                    className="mb-4 p-1 bg-neutral-700 rounded"
                     value={avatarDraft ?? ''}
                     onChange={(e) => setAvatar(e.target.value)}
                 />
@@ -70,6 +92,13 @@ export const UserEdit: FC = () => {
                         createdAt: new Date(),
                     }}
                 />
+
+                <button
+                    className="mt-4 p-2 rounded bg-primary-600 hover:bg-primary-400"
+                    onClick={submit}
+                >
+                    Update User
+                </button>
             </div>
         </div>
     );
