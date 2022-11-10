@@ -1,4 +1,3 @@
-import { Menu } from '@mui/material';
 import { FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Thread } from 'splist-server/prisma/generated';
@@ -8,36 +7,40 @@ import {
     MenuItemCopyID,
     MenuItemDelete,
 } from '../contextMenu/MenuItems';
-import { UseContextMenu } from '../contextMenu/useContextMenu';
+import { ContextMenu } from '../contextMenu/useContextMenu';
 
-interface Props extends Omit<UseContextMenu, 'handle'> {
+interface Props {
     thread: Thread;
 }
 
-export const ThreadContextMenu: FC<Props> = ({ thread, close, menuProps }) => {
+export const ThreadContextMenu: FC<Props> = ({ thread }) => {
     const { threadId } = useParams();
     const navigate = useNavigate();
     const { mutate: deleteThread } = trpc.threads.deleteThread.useMutation();
 
     return (
-        <Menu {...menuProps}>
-            <MenuItemCopyContent
-                close={close}
-                label="Title"
-                content={thread.name}
-            />
-            <MenuItemCopyID close={close} id={thread.id} />
-            <MenuItemDelete
-                label="thread"
-                name={'#' + thread.name}
-                close={close}
-                onClick={() => {
-                    deleteThread(thread);
-                    if (threadId === thread.id) {
-                        navigate('/');
-                    }
-                }}
-            />
-        </Menu>
+        <ContextMenu>
+            {(close) => (
+                <>
+                    <MenuItemCopyContent
+                        close={close}
+                        label="Title"
+                        content={thread.name}
+                    />
+                    <MenuItemCopyID close={close} id={thread.id} />
+                    <MenuItemDelete
+                        label="thread"
+                        name={'#' + thread.name}
+                        close={close}
+                        onClick={() => {
+                            deleteThread(thread);
+                            if (threadId === thread.id) {
+                                navigate('/');
+                            }
+                        }}
+                    />
+                </>
+            )}
+        </ContextMenu>
     );
 };
