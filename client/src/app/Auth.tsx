@@ -32,9 +32,13 @@ export const Auth: FC = () => {
 
     trpc.users.userUpdated.useSubscription(undefined, {
         onData(updatedUser) {
-            if (user && updatedUser.id === user.id) {
-                setUser(updatedUser);
-            }
+            setUser((user) => {
+                if (user && updatedUser.id === user.id) {
+                    return updatedUser;
+                } else {
+                    return user;
+                }
+            });
         },
     });
 
