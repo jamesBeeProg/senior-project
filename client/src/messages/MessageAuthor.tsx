@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import type { User } from 'splist-server/prisma/generated';
 import { MenuItemCopyID } from '../contextMenu/MenuItems';
-import { ContextMenu, ContextTrigger } from '../contextMenu/useContextMenu';
+import { ContextMenu, ContextTrigger } from '../contextMenu/ContextMenu';
 import { UserAvatar } from '../users/UserAvatar';
 
 interface Props {

@@ -3,7 +3,7 @@ import TagIcon from '@mui/icons-material/Tag';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import type { Thread } from 'splist-server/prisma/generated';
-import { ContextTrigger } from '../contextMenu/useContextMenu';
+import { ContextTrigger } from '../contextMenu/ContextMenu';
 import { ThreadContextMenu } from '../threads/ThreadContextMenu';
 import { Link, useMatch } from 'react-router-dom';
 

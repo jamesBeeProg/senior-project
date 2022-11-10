@@ -13,14 +13,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PinIcon from '@mui/icons-material/Pin';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { FC, useContext, useState } from 'react';
-import { ContextContext } from './useContextMenu';
+import { ContextMenuContext } from './ContextMenu';
 
 interface MenuItemCopyIDProps {
     id: string;
 }
 
 export const MenuItemCopyID: FC<MenuItemCopyIDProps> = ({ id }) => {
-    const { close } = useContext(ContextContext);
+    const { close } = useContext(ContextMenuContext);
     return (
         <MenuItem
             onClick={async (e) => {
@@ -46,7 +46,7 @@ export const MenuItemCopyContent: FC<MenuItemCopyContentProps> = ({
     label,
     content,
 }) => {
-    const { close } = useContext(ContextContext);
+    const { close } = useContext(ContextMenuContext);
     return (
         <MenuItem
             onClick={async (e) => {
@@ -74,7 +74,7 @@ export const MenuItemDelete: FC<MenuItemDeleteProps> = ({
     name,
     onClick,
 }) => {
-    const { close } = useContext(ContextContext);
+    const { close } = useContext(ContextMenuContext);
     const [open, setOpen] = useState(false);
 
     return (

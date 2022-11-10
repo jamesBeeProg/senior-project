@@ -5,7 +5,7 @@ import {
     MenuItemCopyID,
     MenuItemDelete,
 } from '../contextMenu/MenuItems';
-import { ContextMenu, ContextTrigger } from '../contextMenu/useContextMenu';
+import { ContextMenu, ContextTrigger } from '../contextMenu/ContextMenu';
 import { trpc } from '..';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

@@ -13,9 +13,18 @@ interface MousePos {
     top: number;
 }
 
-type UseContextMenu = ReturnType<typeof useContextMenu>;
+export const ContextMenuContext = createContext({
+    menuProps: { open: false },
+    close() {
+        // empty
+    },
+});
 
-const useContextMenu = () => {
+interface ContextTriggerProps {
+    children(open: MouseEventHandler): ReactNode;
+}
+
+export const ContextTrigger: FC<ContextTriggerProps> = ({ children }) => {
     const [mousePos, setMousePos] = useState<MousePos>();
 
     const handle: MouseEventHandler = (event) => {
@@ -39,33 +48,10 @@ const useContextMenu = () => {
         anchorPosition: mousePos,
     };
 
-    return {
-        handle,
-        close,
-        menuProps,
-    };
-};
-
-const noop = () => {
-    // empty
-};
-
-export const ContextContext = createContext<UseContextMenu>({
-    close: noop,
-    handle: noop,
-    menuProps: { open: false },
-});
-
-interface ContextTriggerProps {
-    children(open: MouseEventHandler): ReactNode;
-}
-
-export const ContextTrigger: FC<ContextTriggerProps> = ({ children }) => {
-    const context = useContextMenu();
     return (
-        <ContextContext.Provider value={context}>
-            {children(context.handle)}
-        </ContextContext.Provider>
+        <ContextMenuContext.Provider value={{ close, menuProps }}>
+            {children(handle)}
+        </ContextMenuContext.Provider>
     );
 };
 
@@ -74,6 +60,6 @@ interface ContextMenuProps {
 }
 
 export const ContextMenu: FC<ContextMenuProps> = ({ children }) => {
-    const { menuProps } = useContext(ContextContext);
+    const { menuProps } = useContext(ContextMenuContext);
     return <Menu {...menuProps}>{children}</Menu>;
 };

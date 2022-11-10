@@ -7,7 +7,7 @@ import {
     MenuItemCopyID,
     MenuItemDelete,
 } from '../contextMenu/MenuItems';
-import { ContextMenu } from '../contextMenu/useContextMenu';
+import { ContextMenu } from '../contextMenu/ContextMenu';
 
 interface Props {
     thread: Thread;

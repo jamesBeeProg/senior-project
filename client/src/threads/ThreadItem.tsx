@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import TagIcon from '@mui/icons-material/Tag';
 import type { Thread } from 'splist-server/prisma/generated';
-import { ContextTrigger } from '../contextMenu/useContextMenu';
+import { ContextTrigger } from '../contextMenu/ContextMenu';
 import { ThreadContextMenu } from './ThreadContextMenu';
 import { Link } from 'react-router-dom';
 
