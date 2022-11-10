@@ -50,7 +50,7 @@ const noop = () => {
     // empty
 };
 
-const ContextContext = createContext<UseContextMenu>({
+export const ContextContext = createContext<UseContextMenu>({
     close: noop,
     handle: noop,
     menuProps: { open: false },
@@ -70,10 +70,10 @@ export const ContextTrigger: FC<ContextTriggerProps> = ({ children }) => {
 };
 
 interface ContextMenuProps {
-    children(close: () => void): ReactNode;
+    children: ReactNode;
 }
 
 export const ContextMenu: FC<ContextMenuProps> = ({ children }) => {
-    const { menuProps, close } = useContext(ContextContext);
-    return <Menu {...menuProps}>{children(close)}</Menu>;
+    const { menuProps } = useContext(ContextContext);
+    return <Menu {...menuProps}>{children}</Menu>;
 };

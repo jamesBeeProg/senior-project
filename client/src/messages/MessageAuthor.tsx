@@ -28,9 +28,7 @@ export const MessageAuthor: FC<Props> = ({ author }) => {
                     </span>
 
                     <ContextMenu>
-                        {(close) => (
-                            <MenuItemCopyID close={close} id={author.id} />
-                        )}
+                        <MenuItemCopyID id={author.id} />
                     </ContextMenu>
                 </div>
             )}

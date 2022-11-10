@@ -20,27 +20,18 @@ export const ThreadContextMenu: FC<Props> = ({ thread }) => {
 
     return (
         <ContextMenu>
-            {(close) => (
-                <>
-                    <MenuItemCopyContent
-                        close={close}
-                        label="Title"
-                        content={thread.name}
-                    />
-                    <MenuItemCopyID close={close} id={thread.id} />
-                    <MenuItemDelete
-                        label="thread"
-                        name={'#' + thread.name}
-                        close={close}
-                        onClick={() => {
-                            deleteThread(thread);
-                            if (threadId === thread.id) {
-                                navigate('/');
-                            }
-                        }}
-                    />
-                </>
-            )}
+            <MenuItemCopyContent label="Title" content={thread.name} />
+            <MenuItemCopyID id={thread.id} />
+            <MenuItemDelete
+                label="thread"
+                name={'#' + thread.name}
+                onClick={() => {
+                    deleteThread(thread);
+                    if (threadId === thread.id) {
+                        navigate('/');
+                    }
+                }}
+            />
         </ContextMenu>
     );
 };

@@ -39,26 +39,19 @@ export const MessageItem: FC<Props> = ({ message }) => {
                     </span>
 
                     <ContextMenu>
-                        {(close) => (
-                            <>
-                                {' '}
-                                <MenuItemCopyContent
-                                    close={close}
-                                    label={'Content'}
-                                    content={message.content}
-                                />
-                                <MenuItemCopyID close={close} id={message.id} />
-                                {user.id === message.authorId && (
-                                    <MenuItemDelete
-                                        label="message"
-                                        name="this message"
-                                        close={close}
-                                        onClick={() => {
-                                            deleteMessage(message);
-                                        }}
-                                    />
-                                )}
-                            </>
+                        <MenuItemCopyContent
+                            label={'Content'}
+                            content={message.content}
+                        />
+                        <MenuItemCopyID id={message.id} />
+                        {user.id === message.authorId && (
+                            <MenuItemDelete
+                                label="message"
+                                name="this message"
+                                onClick={() => {
+                                    deleteMessage(message);
+                                }}
+                            />
                         )}
                     </ContextMenu>
                 </div>

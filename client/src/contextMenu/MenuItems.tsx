@@ -12,32 +12,32 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import PinIcon from '@mui/icons-material/Pin';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
+import { ContextContext } from './useContextMenu';
 
-interface MenuItemProps {
-    close: () => void;
-}
-
-interface MenuItemCopyIDProps extends MenuItemProps {
+interface MenuItemCopyIDProps {
     id: string;
 }
 
-export const MenuItemCopyID: FC<MenuItemCopyIDProps> = ({ id, close }) => (
-    <MenuItem
-        onClick={async (e) => {
-            e.stopPropagation();
-            await navigator.clipboard.writeText(id);
-            close();
-        }}
-    >
-        <ListItemIcon>
-            <PinIcon />
-        </ListItemIcon>
-        <ListItemText>Copy ID</ListItemText>
-    </MenuItem>
-);
+export const MenuItemCopyID: FC<MenuItemCopyIDProps> = ({ id }) => {
+    const { close } = useContext(ContextContext);
+    return (
+        <MenuItem
+            onClick={async (e) => {
+                e.stopPropagation();
+                await navigator.clipboard.writeText(id);
+                close();
+            }}
+        >
+            <ListItemIcon>
+                <PinIcon />
+            </ListItemIcon>
+            <ListItemText>Copy ID</ListItemText>
+        </MenuItem>
+    );
+};
 
-interface MenuItemCopyContentProps extends MenuItemProps {
+interface MenuItemCopyContentProps {
     label: string;
     content: string;
 }
@@ -45,23 +45,25 @@ interface MenuItemCopyContentProps extends MenuItemProps {
 export const MenuItemCopyContent: FC<MenuItemCopyContentProps> = ({
     label,
     content,
-    close,
-}) => (
-    <MenuItem
-        onClick={async (e) => {
-            e.stopPropagation();
-            await navigator.clipboard.writeText(content);
-            close();
-        }}
-    >
-        <ListItemIcon>
-            <ContentCopyIcon />
-        </ListItemIcon>
-        <ListItemText>Copy {label}</ListItemText>
-    </MenuItem>
-);
+}) => {
+    const { close } = useContext(ContextContext);
+    return (
+        <MenuItem
+            onClick={async (e) => {
+                e.stopPropagation();
+                await navigator.clipboard.writeText(content);
+                close();
+            }}
+        >
+            <ListItemIcon>
+                <ContentCopyIcon />
+            </ListItemIcon>
+            <ListItemText>Copy {label}</ListItemText>
+        </MenuItem>
+    );
+};
 
-interface MenuItemDeleteProps extends MenuItemProps {
+interface MenuItemDeleteProps {
     label: string;
     name: string;
     onClick: () => void;
@@ -71,8 +73,8 @@ export const MenuItemDelete: FC<MenuItemDeleteProps> = ({
     label,
     name,
     onClick,
-    close,
 }) => {
+    const { close } = useContext(ContextContext);
     const [open, setOpen] = useState(false);
 
     return (
