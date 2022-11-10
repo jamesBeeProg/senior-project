@@ -13,9 +13,9 @@ interface MousePos {
     top: number;
 }
 
-export type UseContextMenu = ReturnType<typeof useContextMenu>;
+type UseContextMenu = ReturnType<typeof useContextMenu>;
 
-export const useContextMenu = () => {
+const useContextMenu = () => {
     const [mousePos, setMousePos] = useState<MousePos>();
 
     const handle: MouseEventHandler = (event) => {
