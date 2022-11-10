@@ -14,13 +14,17 @@ const AuthContext = createContext(null as unknown as AuthContext);
 export const useAuth = () => useContext(AuthContext);
 
 export const Auth: FC = () => {
+    const [user, setUser] = useState<User | undefined>();
+
     const {
         mutate: login,
-        data: user,
         error,
         reset: logout,
     } = trpc.users.login.useMutation({
         useErrorBoundary: false,
+        onSuccess(data) {
+            setUser(data);
+        },
     });
     const [userId, setUserId] = useState(localStorage.getItem('userId') ?? '');
 
@@ -29,6 +33,14 @@ export const Auth: FC = () => {
             login({ id: userId });
         }
     }, []);
+
+    trpc.users.userUpdated.useSubscription(undefined, {
+        onData(updatedUser) {
+            if (user && updatedUser.id === user.id) {
+                setUser(updatedUser);
+            }
+        },
+    });
 
     if (error || !user) {
         return <Login userId={userId} setUserId={setUserId} login={login} />;
