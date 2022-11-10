@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, MouseEventHandler, ReactNode } from 'react';
 import TagIcon from '@mui/icons-material/Tag';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
@@ -7,63 +7,58 @@ import { ContextTrigger } from '../contextMenu/useContextMenu';
 import { ThreadContextMenu } from '../threads/ThreadContextMenu';
 import { Link, useMatch } from 'react-router-dom';
 
-interface Props {
+interface NavItemProps {
+    to: string;
+    children: ReactNode;
+    onContextMenu?: MouseEventHandler;
+}
+
+export const NavItem: FC<NavItemProps> = ({ to, children, onContextMenu }) => {
+    const selected = useMatch(to);
+
+    return (
+        <Link
+            to={to}
+            onContextMenu={onContextMenu}
+            className={
+                `block hover:bg-primary-400 rounded p-1 text-start ` +
+                (selected ? 'bg-primary-600' : 'bg-neutral-700')
+            }
+        >
+            {children}
+        </Link>
+    );
+};
+
+interface ThreadNavItemProps {
     thread: Thread;
 }
 
-export const NavItem: FC<Props> = ({ thread }) => {
-    const url = `/${thread.id}`;
-    const selected = useMatch(url);
-
+export const ThreadNavItem: FC<ThreadNavItemProps> = ({ thread }) => {
     return (
         <ContextTrigger>
             {(open) => (
-                <Link
-                    to={url}
-                    onContextMenu={open}
-                    className={
-                        `block hover:bg-primary-400 rounded p-1 text-start ` +
-                        (selected ? 'bg-primary-600' : 'bg-neutral-700')
-                    }
-                >
+                <NavItem to={`/${thread.id}`} onContextMenu={open}>
                     <TagIcon /> {thread.name}
                     <ThreadContextMenu thread={thread} />
-                </Link>
+                </NavItem>
             )}
         </ContextTrigger>
     );
 };
 
 export const NavHomeItem: FC = () => {
-    const selected = useMatch('/');
-
     return (
-        <Link
-            to="/"
-            className={
-                `block hover:bg-primary-400 rounded p-1 text-start` +
-                (selected ? ' bg-primary-600' : ' bg-neutral-700')
-            }
-        >
-            <HomeIcon />
-            Home
-        </Link>
+        <NavItem to="/">
+            <HomeIcon /> Home
+        </NavItem>
     );
 };
 
 export const NavUserItem: FC = () => {
-    const selected = useMatch('/user');
-
     return (
-        <Link
-            to="/user"
-            className={
-                `block hover:bg-primary-400 rounded p-1 text-start` +
-                (selected ? ' bg-primary-600' : ' bg-neutral-700')
-            }
-        >
-            <PersonIcon />
-            User
-        </Link>
+        <NavItem to="/user">
+            <PersonIcon /> User
+        </NavItem>
     );
 };
