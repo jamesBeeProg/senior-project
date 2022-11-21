@@ -13,8 +13,22 @@ export const threadRouter = trpc.router({
         return prisma.thread.findMany();
     }),
 
+    getThread: trpc.procedure
+        .input(
+            z.object({
+                id: z.string().cuid(),
+            }),
+        )
+        .query(({ input }) => {
+            return prisma.thread.findUnique({ where: input });
+        }),
+
     createThread: trpc.procedure
-        .input(z.object({ name: z.string().trim().min(1).max(20) }))
+        .input(
+            z.object({
+                name: z.string().trim().min(1).max(20),
+            }),
+        )
         .mutation(async ({ input }) => {
             const thread = await prisma.thread.create({ data: input });
             emitEvent('threadCreated', thread);

@@ -1,6 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 import { trpc } from '..';
 import { useAuth } from '../app/Auth';
+import { useTitle } from '../misc';
 import { User } from './User';
 
 export const UserEdit: FC = () => {
@@ -11,6 +12,8 @@ export const UserEdit: FC = () => {
     const [avatarDraft, setAvatar] = useState(user.avatar ?? '');
 
     const { mutate: updateUser } = trpc.users.updateUser.useMutation();
+
+    useTitle('Splist - User');
 
     const color = useMemo(() => {
         if (colorDraft.length === 0) {

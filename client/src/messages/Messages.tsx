@@ -4,13 +4,18 @@ import { trpc } from '..';
 import { MessageItem } from './MessageItem';
 import { User } from '../users/User';
 import { useParams } from 'react-router-dom';
+import { useTitle } from '../misc';
 
 export const Messages: FC = () => {
     const threadId = useParams().threadId!;
+    const { data: thread } = trpc.threads.getThread.useQuery({ id: threadId });
     const { data: messages } = trpc.messages.getMessages.useQuery({ threadId });
     const { mutate: createMessage } = trpc.messages.createMessage.useMutation();
 
+    useTitle(`Splist # ${thread?.name}`);
+
     const context = trpc.useContext();
+
     trpc.messages.messageCreated.useSubscription(
         { threadId },
         {

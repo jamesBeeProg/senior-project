@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { trpc } from '..';
+import { useTitle } from '../misc';
 import { ThreadItem } from './ThreadItem';
 
 export const Threads: FC = () => {
@@ -7,6 +8,8 @@ export const Threads: FC = () => {
     const { mutate: createThread } = trpc.threads.createThread.useMutation();
 
     const [name, setName] = useState('');
+
+    useTitle('Splist - Home');
 
     return (
         <div className="flex flex-col h-screen">
